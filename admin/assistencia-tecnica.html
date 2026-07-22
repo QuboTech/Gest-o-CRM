@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistência Técnica — Gestão CRM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <div class="admin-brand">Gestão CRM</div>
+  <nav class="admin-nav">
+    <a href="pedido.html">Pedido</a>
+    <a href="clientes.html">Clientes</a>
+    <a href="assistencia-tecnica.html" class="active">Assistência Técnica</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="financeiro.html">Financeiro</a>
+    <a href="calculadora-custo.html">Calculadora de Custo</a>
+  </nav>
+  <div class="admin-user">
+    <span>Olá, <span data-user-name>—</span></span>
+    <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
+    <button data-logout>Sair</button>
+  </div>
+</header>
+
+<main class="admin-main">
+  <h1 class="admin-title">Assistência Técnica</h1>
+
+  <div class="admin-card">
+    <h2 id="form-title">Nova assistência técnica</h2>
+    <form id="assistencia-form">
+      <input type="hidden" id="assistencia-id">
+
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field span-2">
+          <label for="select-cliente">Cliente *</label>
+          <select id="select-cliente" required>
+            <option value="">— Selecione —</option>
+          </select>
+        </div>
+        <p style="font-size:0.85rem; grid-column:1/-1; margin-top:-8px;">Não encontrou o cliente? <a href="clientes.html" style="color:var(--blue-accent); font-weight:600;">Cadastre um novo cliente</a> e volte aqui.</p>
+        <div id="cliente-resumo" style="display:none; grid-column:1/-1; padding:14px; background:var(--off-white); border-radius:10px; font-size:0.88rem;">
+          <div id="cliente-resumo-texto"></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:8px;">Equipamento</h2>
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="numero_serie">Número de Série *</label>
+          <input type="text" id="numero_serie" maxlength="20" placeholder="Alfanumérico, até 20 caracteres" required>
+          <span class="hint">Somente letras e números, sem espaços ou símbolos.</span>
+        </div>
+        <div class="form-field">
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="aberta">Aberta</option>
+            <option value="em_andamento">Em andamento</option>
+            <option value="concluida">Concluída</option>
+          </select>
+        </div>
+        <div class="form-field span-full">
+          <label for="descricao_defeito">Descrição do Defeito *</label>
+          <textarea id="descricao_defeito" rows="4" maxlength="5000" required></textarea>
+          <span class="hint"><span id="descricao-contador">0</span>/5000 caracteres</span>
+        </div>
+      </div>
+
+      <h2 style="margin-top:8px;">Selo</h2>
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="selo_antigo">Selo Antigo</label>
+          <input type="text" id="selo_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        </div>
+        <div class="form-field">
+          <label for="selo_novo">Selo Novo</label>
+          <input type="text" id="selo_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        </div>
+      </div>
+
+      <h2 style="margin-top:8px;">Lacre</h2>
+      <div class="form-grid" style="margin-bottom:8px;">
+        <div class="form-field">
+          <label for="lacre_antigo">Lacre Antigo</label>
+          <input type="text" id="lacre_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        </div>
+        <div class="form-field">
+          <label for="lacre_novo">Lacre Novo</label>
+          <input type="text" id="lacre_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        </div>
+      </div>
+
+      <p id="assistencia-error" class="error-message" style="display:none;"></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="assistencia-save-btn">Salvar assistência técnica</button>
+        <button type="button" class="btn btn-outline" id="assistencia-cancel-btn">Limpar / novo</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-card">
+    <h2>Assistências técnicas registradas</h2>
+    <input type="text" id="assistencia-search" class="table-search" placeholder="Buscar por cliente, nº de série...">
+    <div class="table-scroll">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Cliente</th>
+            <th>Nº de Série</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="assistencias-tbody">
+          <tr><td colspan="6">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/admin-config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/assistencia-tecnica.js"></script>
+</body>
+</html>
