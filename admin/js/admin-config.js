@@ -3,5 +3,5 @@
 var ADMIN_CONFIG = {
   supabaseUrl: 'https://agtlqmbhkajsxdpeqviq.supabase.co',
   supabaseAnonKey: 'sb_publishable_oewjlw01Gkkn8WSeLFczwA_pLbiDXnA',
-  syntheticEmailDomain: '@hln.internal'
+  syntheticEmailDomain: '@gestaocrm.internal'
 };
