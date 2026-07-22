@@ -1,4 +1,8 @@
-// Compartilhado entre pedido.html e clientes.html.
+// Compartilhado entre pedido.html, clientes.html e assistencia-tecnica.html.
+
+var HISTORICO_STATUS_ASSISTENCIA_LABELS = {
+  aberta: 'Aberta', em_andamento: 'Em andamento', concluida: 'Concluída'
+};
 
 var HISTORICO_FORMA_PAGAMENTO_LABELS = {
   boleto: 'Boleto', a_vista: 'À Vista', cartao_credito: 'Cartão de Crédito',
@@ -137,4 +141,76 @@ async function loadHistoricoCliente(clienteId, containerId, onAtualizado) {
       if (typeof onAtualizado === 'function') onAtualizado();
     });
   });
+}
+
+/* ===================== HISTÓRICO DE ASSISTÊNCIAS TÉCNICAS (por cliente) ===================== */
+
+function abrirEdicaoAssistencia(assistenciaId) {
+  if (typeof window.iniciarEdicaoAssistencia === 'function') {
+    window.iniciarEdicaoAssistencia(assistenciaId);
+    document.querySelectorAll('.modal-overlay.open').forEach(function (modal) {
+      modal.classList.remove('open');
+    });
+  } else {
+    location.href = 'assistencia-tecnica.html?editar=' + assistenciaId;
+  }
+}
+
+async function loadHistoricoAssistencias(clienteId, containerId) {
+  var conteudo = document.getElementById(containerId || 'historico-conteudo');
+  conteudo.textContent = 'Carregando...';
+
+  var { data, error } = await supabaseClient
+    .from('assistencias_tecnicas')
+    .select('*')
+    .eq('cliente_id', clienteId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    conteudo.textContent = 'Erro ao carregar histórico: ' + error.message;
+    return;
+  }
+
+  if (!data || !data.length) {
+    conteudo.innerHTML = '<p style="color:var(--gray-400);">Nenhuma assistência técnica anterior encontrada para esse cliente.</p>';
+    return;
+  }
+
+  conteudo.innerHTML = data.map(function (a) {
+    var dataStr = new Date(a.created_at).toLocaleDateString('pt-BR');
+    var badgeClass = a.status === 'concluida' ? 'badge-ok' : 'badge-warning';
+    var badgeText = HISTORICO_STATUS_ASSISTENCIA_LABELS[a.status] || a.status;
+    var equipamento = [a.marca, a.modelo].filter(Boolean).join(' ') || '—';
+
+    return '<div style="border-bottom:1px solid var(--off-white); padding:14px 0;">' +
+      '<strong>Assistência nº ' + a.numero + '</strong> <span class="badge ' + badgeClass + '">' + badgeText + '</span> — ' + dataStr +
+      '<p style="margin:8px 0; font-size:0.88rem;">' +
+        '<strong>Equipamento:</strong> ' + equipamento + ' &nbsp; <strong>Nº de Série:</strong> ' + (a.numero_serie || '—') +
+      '</p>' +
+      '<p style="margin:0 0 8px; font-size:0.88rem;"><strong>Defeito:</strong> ' + (a.descricao_defeito || '—') + '</p>' +
+      '<div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">' +
+        '<button type="button" class="btn btn-outline" style="padding:6px 12px; font-size:0.78rem;" data-editar-assistencia="' + a.id + '">Editar</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  conteudo.querySelectorAll('[data-editar-assistencia]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      abrirEdicaoAssistencia(btn.dataset.editarAssistencia);
+    });
+  });
+}
+
+/* ===================== ALERTA DE Nº DE SÉRIE JÁ REGISTRADO (qualquer cliente) ===================== */
+
+async function buscarAssistenciasPorNumeroSerie(numeroSerie, excluirId) {
+  if (!numeroSerie) return [];
+  var query = supabaseClient
+    .from('assistencias_tecnicas')
+    .select('id, numero, status, created_at, clientes(razao_social, nome_fantasia)')
+    .ilike('numero_serie', numeroSerie);
+  if (excluirId) query = query.neq('id', excluirId);
+  var { data, error } = await query;
+  if (error) return [];
+  return data || [];
 }

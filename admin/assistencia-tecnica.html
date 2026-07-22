@@ -12,7 +12,7 @@
 </head>
 <body class="admin-body">
 
-<header class="admin-header">
+<header class="admin-header no-print">
   <div class="admin-brand">Gestão CRM</div>
   <nav class="admin-nav">
     <a href="pedido.html">Pedido</a>
@@ -29,8 +29,12 @@
   </div>
 </header>
 
-<main class="admin-main">
-  <h1 class="admin-title">Assistência Técnica</h1>
+<main class="admin-main no-print">
+  <h1 class="admin-title" id="pagina-titulo">Assistência Técnica</h1>
+
+  <p id="edicao-banner" style="display:none; margin-top:-16px; margin-bottom:20px; padding:12px 16px; background:#e7f0fe; color:#0a1930; border-radius:8px; font-size:0.9rem; font-weight:600;">
+    <span id="edicao-banner-texto"></span> — <a href="assistencia-tecnica.html" style="color:var(--blue-accent); text-decoration:underline;">Cancelar edição / Nova assistência</a>
+  </p>
 
   <div class="admin-card">
     <h2 id="form-title">Nova assistência técnica</h2>
@@ -47,11 +51,20 @@
         <p style="font-size:0.85rem; grid-column:1/-1; margin-top:-8px;">Não encontrou o cliente? <a href="clientes.html" style="color:var(--blue-accent); font-weight:600;">Cadastre um novo cliente</a> e volte aqui.</p>
         <div id="cliente-resumo" style="display:none; grid-column:1/-1; padding:14px; background:var(--off-white); border-radius:10px; font-size:0.88rem;">
           <div id="cliente-resumo-texto"></div>
+          <button type="button" class="btn btn-outline" id="btn-ver-historico" style="margin-top:12px; padding:8px 16px; font-size:0.82rem;">Ver histórico de assistências deste cliente</button>
         </div>
       </div>
 
       <h2 style="margin-top:8px;">Equipamento</h2>
-      <div class="form-grid" style="margin-bottom:20px;">
+      <div class="form-grid" style="margin-bottom:8px;">
+        <div class="form-field">
+          <label for="marca">Marca</label>
+          <input type="text" id="marca" maxlength="100" placeholder="Ex: Toledo">
+        </div>
+        <div class="form-field">
+          <label for="modelo">Modelo</label>
+          <input type="text" id="modelo" maxlength="100" placeholder="Ex: 9091-B/15">
+        </div>
         <div class="form-field">
           <label for="numero_serie">Número de Série *</label>
           <input type="text" id="numero_serie" maxlength="20" placeholder="Alfanumérico, até 20 caracteres" required>
@@ -65,6 +78,9 @@
             <option value="concluida">Concluída</option>
           </select>
         </div>
+      </div>
+      <p id="alerta-serie-repetida" style="display:none; margin-bottom:12px; padding:10px 14px; background:#fff3cd; color:#8a6100; border-radius:8px; font-size:0.85rem; font-weight:600;"></p>
+      <div class="form-grid" style="margin-bottom:20px;">
         <div class="form-field span-full">
           <label for="descricao_defeito">Descrição do Defeito *</label>
           <textarea id="descricao_defeito" rows="4" maxlength="5000" required></textarea>
@@ -100,6 +116,7 @@
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" id="assistencia-save-btn">Salvar assistência técnica</button>
+        <button type="button" class="btn btn-outline" id="btn-imprimir">Imprimir (2 vias)</button>
         <button type="button" class="btn btn-outline" id="assistencia-cancel-btn">Limpar / novo</button>
       </div>
     </form>
@@ -107,13 +124,14 @@
 
   <div class="admin-card">
     <h2>Assistências técnicas registradas</h2>
-    <input type="text" id="assistencia-search" class="table-search" placeholder="Buscar por cliente, nº de série...">
+    <input type="text" id="assistencia-search" class="table-search" placeholder="Buscar por cliente, nº de série, marca/modelo...">
     <div class="table-scroll">
       <table class="admin-table">
         <thead>
           <tr>
             <th>Nº</th>
             <th>Cliente</th>
+            <th>Equipamento</th>
             <th>Nº de Série</th>
             <th>Status</th>
             <th>Data</th>
@@ -121,20 +139,35 @@
           </tr>
         </thead>
         <tbody id="assistencias-tbody">
-          <tr><td colspan="6">Carregando...</td></tr>
+          <tr><td colspan="7">Carregando...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </main>
 
-<div id="toast-container"></div>
+<!-- MODAL HISTÓRICO DE ASSISTÊNCIAS DO CLIENTE -->
+<div class="modal-overlay no-print" id="modal-historico">
+  <div class="modal-box" style="max-width:720px;">
+    <h3>Histórico de Assistências Técnicas — <span id="historico-cliente-nome"></span></h3>
+    <div id="historico-conteudo">Carregando...</div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-outline" id="historico-btn-fechar">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ÁREA DE IMPRESSÃO (2 vias) -->
+<div class="print-sheet" id="print-sheet"></div>
+
+<div id="toast-container" class="no-print"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/admin-config.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
+<script src="js/historico.js"></script>
 <script src="js/assistencia-tecnica.js"></script>
 </body>
 </html>
