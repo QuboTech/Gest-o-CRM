@@ -162,7 +162,7 @@ async function loadHistoricoAssistencias(clienteId, containerId) {
 
   var { data, error } = await supabaseClient
     .from('assistencias_tecnicas')
-    .select('*')
+    .select('*, equipamentos(marca, modelo, numero_serie)')
     .eq('cliente_id', clienteId)
     .order('created_at', { ascending: false });
 
@@ -180,12 +180,13 @@ async function loadHistoricoAssistencias(clienteId, containerId) {
     var dataStr = new Date(a.created_at).toLocaleDateString('pt-BR');
     var badgeClass = a.status === 'concluida' ? 'badge-ok' : 'badge-warning';
     var badgeText = HISTORICO_STATUS_ASSISTENCIA_LABELS[a.status] || a.status;
-    var equipamento = [a.marca, a.modelo].filter(Boolean).join(' ') || '—';
+    var eq = a.equipamentos || {};
+    var equipamento = [eq.marca, eq.modelo].filter(Boolean).join(' ') || '—';
 
     return '<div style="border-bottom:1px solid var(--off-white); padding:14px 0;">' +
       '<strong>Assistência nº ' + a.numero + '</strong> <span class="badge ' + badgeClass + '">' + badgeText + '</span> — ' + dataStr +
       '<p style="margin:8px 0; font-size:0.88rem;">' +
-        '<strong>Equipamento:</strong> ' + equipamento + ' &nbsp; <strong>Nº de Série:</strong> ' + (a.numero_serie || '—') +
+        '<strong>Equipamento:</strong> ' + equipamento + ' &nbsp; <strong>Nº de Série:</strong> ' + (eq.numero_serie || '—') +
       '</p>' +
       '<p style="margin:0 0 8px; font-size:0.88rem;"><strong>Defeito:</strong> ' + (a.descricao_defeito || '—') + '</p>' +
       '<div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">' +
@@ -201,16 +202,16 @@ async function loadHistoricoAssistencias(clienteId, containerId) {
   });
 }
 
-/* ===================== ALERTA DE Nº DE SÉRIE JÁ REGISTRADO (qualquer cliente) ===================== */
+/* ===================== ALERTA DE EQUIPAMENTO JÁ COM ASSISTÊNCIAS ANTERIORES ===================== */
 
-async function buscarAssistenciasPorNumeroSerie(numeroSerie, excluirId) {
-  if (!numeroSerie) return [];
+async function contarAssistenciasPorEquipamento(equipamentoId, excluirId) {
+  if (!equipamentoId) return 0;
   var query = supabaseClient
     .from('assistencias_tecnicas')
-    .select('id, numero, status, created_at, clientes(razao_social, nome_fantasia)')
-    .ilike('numero_serie', numeroSerie);
+    .select('id', { count: 'exact', head: true })
+    .eq('equipamento_id', equipamentoId);
   if (excluirId) query = query.neq('id', excluirId);
-  var { data, error } = await query;
-  if (error) return [];
-  return data || [];
+  var { count, error } = await query;
+  if (error) return 0;
+  return count || 0;
 }

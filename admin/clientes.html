@@ -18,6 +18,7 @@
     <a href="pedido.html">Pedido</a>
     <a href="clientes.html" class="active">Clientes</a>
     <a href="assistencia-tecnica.html">Assistência Técnica</a>
+    <a href="estoque.html">Estoque</a>
     <a href="catalogo.html">Catálogo</a>
     <a href="financeiro.html">Financeiro</a>
     <a href="calculadora-custo.html">Calculadora de Custo</a>
@@ -159,6 +160,10 @@
 
   <div class="admin-card">
     <h2>Clientes cadastrados</h2>
+    <div class="form-actions" style="margin-top:0; margin-bottom:16px;">
+      <button type="button" class="btn btn-outline" id="btn-baixar-modelo-cliente">Baixar modelo de importação</button>
+      <button type="button" class="btn btn-outline" id="btn-abrir-importar-cliente">Importar planilha</button>
+    </div>
     <input type="text" id="cliente-search" class="table-search" placeholder="Buscar por nome, CNPJ...">
     <div class="table-scroll">
       <table class="admin-table">
@@ -227,15 +232,38 @@
   </div>
 </div>
 
+<!-- MODAL IMPORTAR PLANILHA DE CLIENTES -->
+<div class="modal-overlay" id="modal-importar-cliente">
+  <div class="modal-box" style="max-width:680px;">
+    <h3>Importar Clientes via Planilha</h3>
+    <p style="font-size:0.85rem; color:var(--gray-700); margin-bottom:14px;">
+      Use o modelo (botão "Baixar modelo de importação"), preencha as linhas e envie o arquivo .xlsx aqui.
+      Só a Razão Social é obrigatória. Se o CNPJ/CPF já existir num cliente cadastrado, os dados desse cliente são atualizados em vez de criar um duplicado.
+    </p>
+    <div class="form-field" style="margin-bottom:14px;">
+      <label for="importar-cliente-arquivo">Arquivo (.xlsx)</label>
+      <input type="file" id="importar-cliente-arquivo" accept=".xlsx,.xls">
+    </div>
+    <div id="importar-cliente-preview" style="display:none; margin-bottom:14px; max-height:240px; overflow-y:auto; font-size:0.82rem;"></div>
+    <p id="importar-cliente-error" class="error-message" style="display:none;"></p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" id="importar-cliente-btn-confirmar" disabled>Importar linhas</button>
+      <button type="button" class="btn btn-outline" id="importar-cliente-btn-cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="js/admin-config.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/historico.js"></script>
 <script src="js/cnpj.js"></script>
+<script src="js/planilha.js"></script>
 <script src="js/clientes.js"></script>
 </body>
 </html>
