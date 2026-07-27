@@ -216,7 +216,7 @@ body.admin-body {
   color: var(--gray-700);
 }
 .admin-table tr:hover td { background: var(--off-white); }
-.admin-table .row-actions { display: flex; gap: 8px; }
+.admin-table .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .admin-table .row-actions button {
   background: none;
   border: none;

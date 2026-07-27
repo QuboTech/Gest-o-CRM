@@ -91,6 +91,7 @@ function renderClientesTable(list) {
       '<td>' + contato + '</td>' +
       '<td class="row-actions">' +
         '<button data-historico="' + c.id + '">Histórico</button>' +
+        '<button data-historico-assistencia="' + c.id + '">Assist. Técnica</button>' +
         '<button data-edit="' + c.id + '">Editar</button>' +
         '<button data-delete="' + c.id + '" class="danger">Excluir</button>' +
       '</td>' +
@@ -104,6 +105,16 @@ function renderClientesTable(list) {
       document.getElementById('historico-cliente-nome').textContent = cliente.razao_social;
       document.getElementById('modal-historico').classList.add('open');
       loadHistoricoCliente(cliente.id, 'historico-conteudo');
+    });
+  });
+
+  tbody.querySelectorAll('[data-historico-assistencia]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var cliente = allClientes.find(function (c) { return c.id === btn.dataset.historicoAssistencia; });
+      if (!cliente) return;
+      document.getElementById('historico-assistencia-cliente-nome').textContent = cliente.razao_social;
+      document.getElementById('modal-historico-assistencia').classList.add('open');
+      loadHistoricoAssistencias(cliente.id, 'historico-assistencia-conteudo');
     });
   });
 
@@ -352,4 +363,9 @@ document.getElementById('cliente-cancel-btn').addEventListener('click', resetFor
 var historicoBtnFechar = document.getElementById('historico-btn-fechar');
 if (historicoBtnFechar) historicoBtnFechar.addEventListener('click', function () {
   document.getElementById('modal-historico').classList.remove('open');
+});
+
+var historicoAssistenciaBtnFechar = document.getElementById('historico-assistencia-btn-fechar');
+if (historicoAssistenciaBtnFechar) historicoAssistenciaBtnFechar.addEventListener('click', function () {
+  document.getElementById('modal-historico-assistencia').classList.remove('open');
 });
