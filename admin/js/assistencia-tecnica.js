@@ -702,7 +702,7 @@ function buildAssistenciaViaHtml(assistencia, label) {
   ].filter(Boolean).join(', ');
 
   return '<div class="print-via">' +
-    '<div class="print-header"><div><h2>Assistência Técnica nº ' + (assistencia.numero || '') + ' — HLN Embalagens e Equipamentos</h2>Data: ' + dataStr + '</div>' +
+    '<div class="print-header"><div><h2>Assistência Técnica nº ' + (assistencia.numero || '') + ' — ' + EMPRESA_CONFIG.nome + '</h2>Data: ' + dataStr + '</div>' +
     '<div class="print-via-label">Via ' + label + '</div></div>' +
     '<p><strong>CLIENTE:</strong> ' + (cliente.razao_social || '') + (cliente.nome_fantasia ? ' (' + cliente.nome_fantasia + ')' : '') + '</p>' +
     '<p><strong>ENDEREÇO:</strong> ' + enderecoCompleto + '</p>' +

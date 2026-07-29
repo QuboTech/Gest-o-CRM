@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "hln-site",
+      "name": "gestao-crm",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["--yes", "serve", "-l", "5173", "."],
       "port": 5173

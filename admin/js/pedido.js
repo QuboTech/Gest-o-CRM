@@ -540,7 +540,7 @@ function formatarFormaPagamento() {
 
 function deveMostrarChavePix() {
   var forma = document.getElementById('forma_pagamento').value;
-  return forma === 'a_vista' || forma === 'pix';
+  return !!EMPRESA_CONFIG.chavePix && (forma === 'a_vista' || forma === 'pix');
 }
 
 /* ===================== IMPRESSÃO (2 vias) ===================== */
@@ -576,7 +576,7 @@ function buildViaHtml(label) {
   var formaPagamentoTexto = formatarFormaPagamento();
 
   return '<div class="print-via">' +
-    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — HLN Embalagens e Equipamentos</h2>Data: ' + dataStr + '</div>' +
+    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — ' + EMPRESA_CONFIG.nome + '</h2>Data: ' + dataStr + '</div>' +
     '<div class="print-via-label">Via ' + label + '</div></div>' +
     '<p><strong>CLIENTE:</strong> ' + (cliente.razao_social || '') + (cliente.nome_fantasia ? ' (' + cliente.nome_fantasia + ')' : '') + '</p>' +
     '<p><strong>ENDEREÇO:</strong> ' + enderecoCompleto + '</p>' +
@@ -590,28 +590,22 @@ function buildViaHtml(label) {
     '<p><strong>OBSERVAÇÃO:</strong> ' + (document.getElementById('observacao').value || '') + '</p>' +
     '<p><strong>FORMA DE PAGAMENTO:</strong> ' + formaPagamentoTexto + ' &nbsp; <strong>VALOR TOTAL A PAGAR:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar').value) + '</p>' +
     (deveMostrarDescontoVista() ? '<p><strong>TOTAL A PAGAR À VISTA:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar_vista').value) + '</p>' : '') +
-    (deveMostrarChavePix() ? '<p><strong>CHAVE PIX:</strong> 66878650000142</p>' : '') +
+    (deveMostrarChavePix() ? '<p><strong>CHAVE PIX:</strong> ' + EMPRESA_CONFIG.chavePix + '</p>' : '') +
   '</div>';
 }
 
 /* ===================== ORÇAMENTO (A4, papel timbrado) ===================== */
 
-var HLN_DADOS_EMPRESA = {
-  cnpj: '66.878.650/0001-42',
-  endereco: 'Jardim Nossa Senhora de Fátima, Americana - SP, CEP 13478-570'
-};
-
 var BRAND_MARK_HTML =
-  '<div class="brand-mark" role="img" aria-label="HLN Embalagens e Equipamentos">' +
-    '<span class="bm-label" aria-hidden="true">Embalagens</span>' +
+  '<div class="brand-mark" role="img" aria-label="' + EMPRESA_CONFIG.nome + '">' +
+    '<span class="bm-label" aria-hidden="true">Gestão</span>' +
     '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
       '<path d="M6 38 Q100 2 194 38"/><path d="M30 38 Q100 14 170 38"/><path d="M54 38 Q100 24 146 38"/>' +
     '</svg>' +
-    '<span class="bm-hln" aria-hidden="true">HLN</span>' +
+    '<span class="bm-word" aria-hidden="true">CRM</span>' +
     '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
       '<path d="M6 2 Q100 38 194 2"/><path d="M30 2 Q100 26 170 2"/><path d="M54 2 Q100 16 146 2"/>' +
     '</svg>' +
-    '<span class="bm-label" aria-hidden="true">e Equipamentos</span>' +
   '</div>';
 
 function buildOrcamentoHtml() {
@@ -643,9 +637,9 @@ function buildOrcamentoHtml() {
     '<div class="orcamento-header">' +
       '<div>' + BRAND_MARK_HTML +
         '<div class="orcamento-empresa-dados">' +
-          'HLN Embalagens e Equipamentos<br>' +
-          'CNPJ: ' + HLN_DADOS_EMPRESA.cnpj + '<br>' +
-          HLN_DADOS_EMPRESA.endereco +
+          EMPRESA_CONFIG.nome + '<br>' +
+          (EMPRESA_CONFIG.cnpj ? 'CNPJ: ' + EMPRESA_CONFIG.cnpj + '<br>' : '') +
+          EMPRESA_CONFIG.endereco +
         '</div>' +
       '</div>' +
       '<div class="orcamento-titulo"><h1>ORÇAMENTO</h1>Data: ' + dataStr + '</div>' +
@@ -667,7 +661,7 @@ function buildOrcamentoHtml() {
       ' &nbsp; <strong>Forma de pagamento:</strong> ' + formaPagamentoTexto + '</p>' +
     '<p><strong>Valor total:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar').value) + '</p>' +
     (deveMostrarDescontoVista() ? '<p><strong>Total à vista:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar_vista').value) + '</p>' : '') +
-    (deveMostrarChavePix() ? '<p><strong>Chave PIX:</strong> 66878650000142</p>' : '') +
+    (deveMostrarChavePix() ? '<p><strong>Chave PIX:</strong> ' + EMPRESA_CONFIG.chavePix + '</p>' : '') +
   '</div>';
 }
 
