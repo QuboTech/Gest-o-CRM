@@ -598,24 +598,7 @@ function buildViaHtml(label) {
 
 var BRAND_MARK_HTML =
   '<div class="brand-mark" role="img" aria-label="' + EMPRESA_CONFIG.nome + '">' +
-    '<svg class="bm-icon" viewBox="0 0 300 300" aria-hidden="true">' +
-      '<g class="bm-icon-lines">' +
-        '<line x1="150" y1="40" x2="235" y2="95" stroke-width="6"/><line x1="150" y1="40" x2="55" y2="105" stroke-width="6"/>' +
-        '<line x1="55" y1="105" x2="35" y2="205" stroke-width="6"/><line x1="235" y1="95" x2="155" y2="210" stroke-width="6"/>' +
-        '<line x1="100" y1="150" x2="155" y2="210" stroke-width="6"/><line x1="35" y1="205" x2="100" y2="150" stroke-width="6"/>' +
-        '<line x1="155" y1="210" x2="150" y2="145" stroke-width="6"/><line x1="155" y1="210" x2="190" y2="255" stroke-width="6"/>' +
-        '<line x1="155" y1="210" x2="85" y2="255" stroke-width="6"/>' +
-        '<path d="M 117 245 A 42 42 0 0 1 190 244" stroke-width="6"/>' +
-      '</g>' +
-      '<g class="bm-icon-rings">' +
-        '<circle cx="235" cy="95" r="14" stroke-width="9"/><circle cx="55" cy="105" r="11" stroke-width="7"/>' +
-        '<circle cx="100" cy="150" r="10" stroke-width="6"/><circle cx="155" cy="210" r="20" stroke-width="11"/>' +
-        '<circle cx="150" cy="145" r="11" stroke-width="7"/><circle cx="190" cy="255" r="10" stroke-width="6"/>' +
-      '</g>' +
-      '<g class="bm-icon-dots">' +
-        '<circle cx="150" cy="40" r="16"/><circle cx="35" cy="205" r="15"/><circle cx="85" cy="255" r="15"/>' +
-      '</g>' +
-    '</svg>' +
+    '<img class="bm-icon" src="../assets/img/logo-icon.png" alt="">' +
     '<span class="bm-word" aria-hidden="true">CRP</span>' +
   '</div>';
 

@@ -108,19 +108,6 @@ h1, h2, h3 {
   height: auto;
   display: block;
 }
-.bm-icon-lines line,
-.bm-icon-lines path {
-  fill: none;
-  stroke: var(--turquoise);
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-.bm-icon-rings circle {
-  fill: none;
-  stroke: var(--turquoise);
-  vector-effect: non-scaling-stroke;
-}
-.bm-icon-dots circle { fill: var(--turquoise); }
 
 .brand-mark--header { width: 54px; font-size: 0.54px; }
 .brand-mark--hero { width: 100%; max-width: 320px; font-size: 3.2px; }
