@@ -150,6 +150,13 @@
 
   <div class="admin-card">
     <h2>Assistências técnicas registradas</h2>
+    <div class="filtro-status-tabs" id="filtro-status-tabs">
+      <button type="button" class="filtro-status-btn active" data-status="">Todas</button>
+      <button type="button" class="filtro-status-btn" data-status="aberta">Abertas</button>
+      <button type="button" class="filtro-status-btn" data-status="em_andamento">Em andamento</button>
+      <button type="button" class="filtro-status-btn" data-status="concluida">Concluídas</button>
+      <button type="button" class="filtro-status-btn" data-status="nao_aprovada">Não aprovadas</button>
+    </div>
     <input type="text" id="assistencia-search" class="table-search" placeholder="Buscar por cliente, nº de série, marca/modelo...">
     <div class="table-scroll">
       <table class="admin-table">

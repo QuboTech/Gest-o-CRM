@@ -12,7 +12,7 @@
 </head>
 <body class="admin-body">
 
-<header class="admin-header">
+<header class="admin-header no-print">
   <div class="admin-brand">Gestão CRM</div>
   <nav class="admin-nav">
     <a href="pedido.html">Pedido</a>
@@ -29,7 +29,7 @@
   </div>
 </header>
 
-<main class="admin-main">
+<main class="admin-main no-print">
   <h1 class="admin-title">Clientes</h1>
 
   <div class="admin-card">
@@ -184,26 +184,31 @@
 </main>
 
 <!-- MODAL HISTÓRICO DE ASSISTÊNCIAS TÉCNICAS -->
-<div class="modal-overlay" id="modal-historico-assistencia">
+<div class="modal-overlay no-print" id="modal-historico-assistencia">
   <div class="modal-box" style="max-width:720px;">
     <h3>Histórico de Assistências Técnicas — <span id="historico-assistencia-cliente-nome"></span></h3>
     <div id="historico-assistencia-conteudo">Carregando...</div>
     <div class="form-actions">
+      <button type="button" class="btn btn-outline" id="historico-assistencia-btn-imprimir">Imprimir</button>
       <button type="button" class="btn btn-outline" id="historico-assistencia-btn-fechar">Fechar</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL HISTÓRICO DE COMPRAS -->
-<div class="modal-overlay" id="modal-historico">
+<div class="modal-overlay no-print" id="modal-historico">
   <div class="modal-box" style="max-width:720px;">
     <h3>Histórico de Compras — <span id="historico-cliente-nome"></span></h3>
     <div id="historico-conteudo">Carregando...</div>
     <div class="form-actions">
+      <button type="button" class="btn btn-outline" id="historico-btn-imprimir">Imprimir</button>
       <button type="button" class="btn btn-outline" id="historico-btn-fechar">Fechar</button>
     </div>
   </div>
 </div>
+
+<!-- ÁREA DE IMPRESSÃO (histórico do cliente) -->
+<div class="print-sheet" id="print-sheet"></div>
 
 <!-- MODAL TRANSFERIR E EXCLUIR (cadastro duplicado com pedidos/orçamentos vinculados) -->
 <div class="modal-overlay" id="modal-merge-cliente">

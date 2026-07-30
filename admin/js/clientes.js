@@ -370,6 +370,37 @@ if (historicoAssistenciaBtnFechar) historicoAssistenciaBtnFechar.addEventListene
   document.getElementById('modal-historico-assistencia').classList.remove('open');
 });
 
+/* ===================== IMPRIMIR HISTÓRICO DO CLIENTE ===================== */
+
+function imprimirHistorico(titulo, nomeCliente, conteudoId) {
+  var conteudoHtml = document.getElementById(conteudoId).innerHTML;
+  var dataStr = new Date().toLocaleDateString('pt-BR');
+
+  document.getElementById('print-sheet').innerHTML =
+    '<div class="historico-print">' +
+      '<h2>' + titulo + ' — ' + nomeCliente + '</h2>' +
+      '<div class="historico-data">Emitido em ' + dataStr + '</div>' +
+      conteudoHtml +
+    '</div>';
+
+  var originalTitle = document.title;
+  document.title = titulo + ' - ' + nomeCliente;
+  window.print();
+  document.title = originalTitle;
+}
+
+var historicoBtnImprimir = document.getElementById('historico-btn-imprimir');
+if (historicoBtnImprimir) historicoBtnImprimir.addEventListener('click', function () {
+  var nomeCliente = document.getElementById('historico-cliente-nome').textContent;
+  imprimirHistorico('Histórico de Compras', nomeCliente, 'historico-conteudo');
+});
+
+var historicoAssistenciaBtnImprimir = document.getElementById('historico-assistencia-btn-imprimir');
+if (historicoAssistenciaBtnImprimir) historicoAssistenciaBtnImprimir.addEventListener('click', function () {
+  var nomeCliente = document.getElementById('historico-assistencia-cliente-nome').textContent;
+  imprimirHistorico('Histórico de Assistências Técnicas', nomeCliente, 'historico-assistencia-conteudo');
+});
+
 /* ===================== IMPORTAR / MODELO DE PLANILHA ===================== */
 
 var COLUNAS_CLIENTE = [

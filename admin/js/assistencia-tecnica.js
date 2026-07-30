@@ -433,7 +433,7 @@ async function loadAssistencias() {
   }
 
   allAssistencias = data || [];
-  renderAssistenciasTable(allAssistencias);
+  aplicarFiltrosAssistencias();
 }
 
 function nomeClienteAssistencia(a) {
@@ -554,15 +554,31 @@ async function iniciarEdicaoAssistencia(assistenciaId) {
 }
 window.iniciarEdicaoAssistencia = iniciarEdicaoAssistencia;
 
-document.getElementById('assistencia-search').addEventListener('input', function (e) {
-  var term = e.target.value.toLowerCase();
+var filtroStatusAtual = '';
+
+function aplicarFiltrosAssistencias() {
+  var term = document.getElementById('assistencia-search').value.toLowerCase();
   var filtered = allAssistencias.filter(function (a) {
-    return nomeClienteAssistencia(a).toLowerCase().includes(term) ||
+    var passaStatus = !filtroStatusAtual || a.status === filtroStatusAtual;
+    var passaBusca = !term ||
+      nomeClienteAssistencia(a).toLowerCase().includes(term) ||
       numeroSerieTexto(a).toLowerCase().includes(term) ||
       equipamentoTexto(a).toLowerCase().includes(term) ||
       String(a.numero).includes(term);
+    return passaStatus && passaBusca;
   });
   renderAssistenciasTable(filtered);
+}
+
+document.getElementById('assistencia-search').addEventListener('input', aplicarFiltrosAssistencias);
+
+document.querySelectorAll('.filtro-status-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.filtro-status-btn').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    filtroStatusAtual = btn.dataset.status;
+    aplicarFiltrosAssistencias();
+  });
 });
 
 /* ===================== SALVAR ===================== */
