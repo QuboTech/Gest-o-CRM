@@ -104,18 +104,23 @@ h1, h2, h3 {
 }
 
 .bm-icon {
-  width: 55%;
+  width: 60%;
   height: auto;
   display: block;
 }
-.bm-icon-lines {
+.bm-icon-lines line,
+.bm-icon-lines path {
   fill: none;
   stroke: var(--turquoise);
-  stroke-width: 6;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
-.bm-icon-dots { fill: var(--turquoise); }
+.bm-icon-rings circle {
+  fill: none;
+  stroke: var(--turquoise);
+  vector-effect: non-scaling-stroke;
+}
+.bm-icon-dots circle { fill: var(--turquoise); }
 
 .brand-mark--header { width: 54px; font-size: 0.54px; }
 .brand-mark--hero { width: 100%; max-width: 320px; font-size: 3.2px; }
