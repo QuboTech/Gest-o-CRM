@@ -1,6 +1,6 @@
-# Gestão CRM
+# CRP (CRM com ERP)
 
-Sistema de gestão (CRM) genérico, sem marca ou dados de nenhuma empresa
+Sistema de gestão genérico, sem marca ou dados de nenhuma empresa
 específica. É o **sistema base**: sempre que for parametrizado para um
 cliente, o caminho é criar uma cópia limpa deste repositório e customizar
 essa cópia (branding, dados da empresa, banco Supabase próprio) — este

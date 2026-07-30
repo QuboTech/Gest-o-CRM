@@ -598,14 +598,18 @@ function buildViaHtml(label) {
 
 var BRAND_MARK_HTML =
   '<div class="brand-mark" role="img" aria-label="' + EMPRESA_CONFIG.nome + '">' +
-    '<span class="bm-label" aria-hidden="true">Gestão</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 38 Q100 2 194 38"/><path d="M30 38 Q100 14 170 38"/><path d="M54 38 Q100 24 146 38"/>' +
+    '<svg class="bm-icon" viewBox="0 0 200 160" aria-hidden="true">' +
+      '<g class="bm-icon-lines">' +
+        '<line x1="100" y1="20" x2="55" y2="70"/><line x1="100" y1="20" x2="145" y2="70"/>' +
+        '<line x1="55" y1="70" x2="75" y2="120"/><line x1="145" y1="70" x2="125" y2="120"/>' +
+        '<line x1="75" y1="120" x2="125" y2="120"/><line x1="100" y1="20" x2="100" y2="120"/>' +
+      '</g>' +
+      '<g class="bm-icon-dots">' +
+        '<circle cx="100" cy="20" r="10"/><circle cx="55" cy="70" r="8"/><circle cx="145" cy="70" r="8"/>' +
+        '<circle cx="75" cy="120" r="8"/><circle cx="125" cy="120" r="8"/><circle cx="100" cy="120" r="8"/>' +
+      '</g>' +
     '</svg>' +
-    '<span class="bm-word" aria-hidden="true">CRM</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 2 Q100 38 194 2"/><path d="M30 2 Q100 26 170 2"/><path d="M54 2 Q100 16 146 2"/>' +
-    '</svg>' +
+    '<span class="bm-word" aria-hidden="true">CRP</span>' +
   '</div>';
 
 function buildOrcamentoHtml() {
@@ -678,7 +682,7 @@ document.getElementById('btn-imprimir').addEventListener('click', function () {
   // O nome sugerido ao salvar como PDF vem do document.title — troca temporariamente
   // para o nome do cliente, assim os PDFs saem identificados em vez de todos com o mesmo nome.
   var nomeCliente = selectedCliente.razao_social || selectedCliente.nome_fantasia || 'Pedido';
-  document.title = nomeCliente + ' - Gestão CRM';
+  document.title = nomeCliente + ' - CRP';
 
   window.print();
 });
@@ -720,7 +724,7 @@ document.getElementById('orcamento-preview-confirmar').addEventListener('click',
   document.getElementById('print-sheet').innerHTML = ''; // evita sobrepor com um romaneio gerado antes
 
   var nomeCliente = selectedCliente.razao_social || selectedCliente.nome_fantasia || 'Orcamento';
-  document.title = 'Orçamento - ' + nomeCliente + ' - Gestão CRM';
+  document.title = 'Orçamento - ' + nomeCliente + ' - CRP';
 
   window.print();
 

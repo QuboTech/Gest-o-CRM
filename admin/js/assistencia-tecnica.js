@@ -912,7 +912,7 @@ document.getElementById('btn-imprimir').addEventListener('click', async function
 
   document.getElementById('print-sheet').innerHTML = buildAssistenciaViaHtml(assistencia, 'Cliente') + buildAssistenciaViaHtml(assistencia, 'Empresa');
 
-  document.title = (selectedClienteAssistencia.razao_social || 'Assistencia') + ' - Gestão CRM';
+  document.title = (selectedClienteAssistencia.razao_social || 'Assistencia') + ' - CRP';
   window.print();
 
   showToast('Assistência técnica nº ' + assistencia.numero + ' salva e enviada para impressão.', 'ok');

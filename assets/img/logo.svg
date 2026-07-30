@@ -1,13 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1240">
-  <rect width="1240" height="1240" fill="#0a1930"/>
+  <rect width="1240" height="1240" fill="#0a2540"/>
 
-  <text x="620" y="520" text-anchor="middle" font-family="Montserrat, 'Segoe UI', Arial, sans-serif" font-size="68" font-weight="700" letter-spacing="14" fill="#ffffff">GESTÃO</text>
-
-  <g stroke="#2f7de1" stroke-width="9" fill="none">
-    <path d="M 340 620 Q 620 500 900 620"/>
-    <path d="M 420 620 Q 620 540 820 620"/>
-    <path d="M 500 620 Q 620 575 740 620"/>
+  <!-- Ícone de rede/conectividade (Turquesa Tech) -->
+  <g stroke="#00d4b2" stroke-width="10" stroke-linecap="round">
+    <line x1="620" y1="330" x2="430" y2="470"/>
+    <line x1="620" y1="330" x2="810" y2="470"/>
+    <line x1="430" y1="470" x2="500" y2="600"/>
+    <line x1="810" y1="470" x2="740" y2="600"/>
+    <line x1="500" y1="600" x2="740" y2="600"/>
+    <line x1="620" y1="330" x2="620" y2="600"/>
+  </g>
+  <g fill="#00d4b2">
+    <circle cx="620" cy="330" r="34"/>
+    <circle cx="430" cy="470" r="26"/>
+    <circle cx="810" cy="470" r="26"/>
+    <circle cx="500" cy="600" r="26"/>
+    <circle cx="740" cy="600" r="26"/>
+    <circle cx="620" cy="600" r="26"/>
   </g>
 
-  <text x="620" y="850" text-anchor="middle" font-family="Montserrat, 'Segoe UI', Arial, sans-serif" font-size="200" font-weight="800" letter-spacing="2" fill="#ffffff">CRM</text>
+  <text x="620" y="880" text-anchor="middle" font-family="'Inter', 'Segoe UI', Arial, sans-serif" font-size="220" font-weight="800" letter-spacing="4" fill="#ffffff">CRP</text>
 </svg>

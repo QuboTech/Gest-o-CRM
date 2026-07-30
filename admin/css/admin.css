@@ -42,7 +42,7 @@ body.admin-body {
   transition: background 0.15s ease, color 0.15s ease;
 }
 .admin-nav a:hover { color: var(--white); background: rgba(255,255,255,0.08); }
-.admin-nav a.active { color: var(--white); background: var(--blue-accent); }
+.admin-nav a.active { color: var(--navy-900); background: var(--turquoise); }
 
 .admin-user {
   display: flex;
@@ -164,7 +164,7 @@ body.admin-body {
   border-radius: 999px;
 }
 .badge-warning { background: #fff3cd; color: #8a6100; }
-.badge-ok { background: #dff5e6; color: #0f7a3d; }
+.badge-ok { background: #d7f7f0; color: #00786a; }
 .badge-danger { background: #fbe1e1; color: #a92323; }
 
 .toast {
@@ -394,7 +394,7 @@ body.admin-body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 25, 48, 0.55);
+  background: rgba(10, 37, 64, 0.55);
   display: none;
   align-items: center;
   justify-content: center;
@@ -545,19 +545,19 @@ body.admin-body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 3px solid #0a1930;
+  border-bottom: 3px solid #0a2540;
   padding-bottom: 12px;
   margin-bottom: 16px;
 }
 .orcamento-via .orcamento-empresa-dados { font-size: 11px; color: #333; margin-top: 6px; }
 .orcamento-via .orcamento-titulo { text-align: right; }
-.orcamento-via .orcamento-titulo h1 { color: #0a1930; }
+.orcamento-via .orcamento-titulo h1 { color: #0a2540; }
 .orcamento-via .brand-mark { width: 70px; font-size: 0.7px; }
 .orcamento-via .secao-titulo {
   font-weight: bold;
   text-transform: uppercase;
   font-size: 11px;
-  color: #0a1930;
+  color: #0a2540;
   margin: 14px 0 6px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 3px;
