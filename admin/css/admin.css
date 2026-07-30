@@ -42,7 +42,7 @@ body.admin-body {
   transition: background 0.15s ease, color 0.15s ease;
 }
 .admin-nav a:hover { color: var(--white); background: rgba(255,255,255,0.08); }
-.admin-nav a.active { color: var(--white); background: var(--blue-accent); }
+.admin-nav a.active { color: var(--navy-900); background: var(--turquoise); }
 
 .admin-user {
   display: flex;
@@ -164,7 +164,8 @@ body.admin-body {
   border-radius: 999px;
 }
 .badge-warning { background: #fff3cd; color: #8a6100; }
-.badge-ok { background: #dff5e6; color: #0f7a3d; }
+.badge-ok { background: #d7f7f0; color: #00786a; }
+.badge-danger { background: #fbe1e1; color: #a92323; }
 
 .toast {
   position: fixed;
@@ -232,6 +233,77 @@ body.admin-body {
   margin-bottom: 16px;
   max-width: 320px;
 }
+
+/* ===== FILTRO DE STATUS (filas) ===== */
+.filtro-status-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.filtro-status-btn {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.82rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #d7ddea;
+  background: var(--white);
+  color: var(--navy-900);
+  cursor: pointer;
+}
+.filtro-status-btn:hover { background: var(--off-white); }
+.filtro-status-btn.active { background: var(--navy-900); color: var(--white); border-color: var(--navy-900); }
+
+/* ===== DASHBOARD DE ASSISTÊNCIAS (cards) ===== */
+.assistencia-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.assistencia-card {
+  border: 1px solid var(--off-white);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+.assistencia-card-topo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.assistencia-card-topo strong { color: var(--navy-900); }
+.sla-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.sla-verde { background: #0f7a3d; }
+.sla-amarelo { background: #c98a00; }
+.sla-vermelho { background: #a92323; }
+.assistencia-card-cliente { font-weight: 700; color: var(--navy-900); font-size: 0.95rem; }
+.assistencia-card-equip,
+.assistencia-card-data { font-size: 0.8rem; color: var(--gray-400); }
+.assistencia-card-resumo {
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  flex-grow: 1;
+  overflow-wrap: break-word;
+}
+.assistencia-card-acoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--off-white);
+}
+.assistencia-card-acoes button {
+  background: none;
+  border: none;
+  color: var(--blue-accent);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+.assistencia-card-acoes button.danger { color: #a92323; }
 
 /* ===== ITENS DE PEDIDO (vácuo + gerais) ===== */
 .item-row {
@@ -322,7 +394,7 @@ body.admin-body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 25, 48, 0.55);
+  background: rgba(10, 37, 64, 0.55);
   display: none;
   align-items: center;
   justify-content: center;
@@ -436,6 +508,11 @@ body.admin-body {
   .print-via table { width: 100%; border-collapse: collapse; font-size: 10px; }
   .print-via th, .print-via td { border: 1px solid #999; padding: 3px 5px; text-align: left; }
   .print-via h2 { font-size: 14px; margin-bottom: 6px; }
+
+  .historico-print { padding: 14px 18px; font-size: 12px; color: #000; }
+  .historico-print h2 { font-size: 16px; margin-bottom: 4px; color: #000; }
+  .historico-print .historico-data { margin-bottom: 16px; color: #444; }
+  .print-sheet button { display: none !important; }
   .print-via .print-header {
     display: flex;
     justify-content: space-between;
@@ -468,19 +545,19 @@ body.admin-body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 3px solid #0a1930;
+  border-bottom: 3px solid #0a2540;
   padding-bottom: 12px;
   margin-bottom: 16px;
 }
 .orcamento-via .orcamento-empresa-dados { font-size: 11px; color: #333; margin-top: 6px; }
 .orcamento-via .orcamento-titulo { text-align: right; }
-.orcamento-via .orcamento-titulo h1 { color: #0a1930; }
+.orcamento-via .orcamento-titulo h1 { color: #0a2540; }
 .orcamento-via .brand-mark { width: 70px; font-size: 0.7px; }
 .orcamento-via .secao-titulo {
   font-weight: bold;
   text-transform: uppercase;
   font-size: 11px;
-  color: #0a1930;
+  color: #0a2540;
   margin: 14px 0 6px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 3px;

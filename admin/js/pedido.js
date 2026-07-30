@@ -540,7 +540,7 @@ function formatarFormaPagamento() {
 
 function deveMostrarChavePix() {
   var forma = document.getElementById('forma_pagamento').value;
-  return forma === 'a_vista' || forma === 'pix';
+  return !!EMPRESA_CONFIG.chavePix && (forma === 'a_vista' || forma === 'pix');
 }
 
 /* ===================== IMPRESSÃO (2 vias) ===================== */
@@ -576,7 +576,7 @@ function buildViaHtml(label) {
   var formaPagamentoTexto = formatarFormaPagamento();
 
   return '<div class="print-via">' +
-    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — HLN Embalagens e Equipamentos</h2>Data: ' + dataStr + '</div>' +
+    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — ' + EMPRESA_CONFIG.nome + '</h2>Data: ' + dataStr + '</div>' +
     '<div class="print-via-label">Via ' + label + '</div></div>' +
     '<p><strong>CLIENTE:</strong> ' + (cliente.razao_social || '') + (cliente.nome_fantasia ? ' (' + cliente.nome_fantasia + ')' : '') + '</p>' +
     '<p><strong>ENDEREÇO:</strong> ' + enderecoCompleto + '</p>' +
@@ -590,28 +590,33 @@ function buildViaHtml(label) {
     '<p><strong>OBSERVAÇÃO:</strong> ' + (document.getElementById('observacao').value || '') + '</p>' +
     '<p><strong>FORMA DE PAGAMENTO:</strong> ' + formaPagamentoTexto + ' &nbsp; <strong>VALOR TOTAL A PAGAR:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar').value) + '</p>' +
     (deveMostrarDescontoVista() ? '<p><strong>TOTAL A PAGAR À VISTA:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar_vista').value) + '</p>' : '') +
-    (deveMostrarChavePix() ? '<p><strong>CHAVE PIX:</strong> 66878650000142</p>' : '') +
+    (deveMostrarChavePix() ? '<p><strong>CHAVE PIX:</strong> ' + EMPRESA_CONFIG.chavePix + '</p>' : '') +
   '</div>';
 }
 
 /* ===================== ORÇAMENTO (A4, papel timbrado) ===================== */
 
-var HLN_DADOS_EMPRESA = {
-  cnpj: '66.878.650/0001-42',
-  endereco: 'Jardim Nossa Senhora de Fátima, Americana - SP, CEP 13478-570'
-};
-
 var BRAND_MARK_HTML =
-  '<div class="brand-mark" role="img" aria-label="HLN Embalagens e Equipamentos">' +
-    '<span class="bm-label" aria-hidden="true">Embalagens</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 38 Q100 2 194 38"/><path d="M30 38 Q100 14 170 38"/><path d="M54 38 Q100 24 146 38"/>' +
+  '<div class="brand-mark" role="img" aria-label="' + EMPRESA_CONFIG.nome + '">' +
+    '<svg class="bm-icon" viewBox="0 0 300 300" aria-hidden="true">' +
+      '<g class="bm-icon-lines">' +
+        '<line x1="150" y1="40" x2="235" y2="95" stroke-width="6"/><line x1="150" y1="40" x2="55" y2="105" stroke-width="6"/>' +
+        '<line x1="55" y1="105" x2="35" y2="205" stroke-width="6"/><line x1="235" y1="95" x2="155" y2="210" stroke-width="6"/>' +
+        '<line x1="100" y1="150" x2="155" y2="210" stroke-width="6"/><line x1="35" y1="205" x2="100" y2="150" stroke-width="6"/>' +
+        '<line x1="155" y1="210" x2="150" y2="145" stroke-width="6"/><line x1="155" y1="210" x2="190" y2="255" stroke-width="6"/>' +
+        '<line x1="155" y1="210" x2="85" y2="255" stroke-width="6"/>' +
+        '<path d="M 117 245 A 42 42 0 0 1 190 244" stroke-width="6"/>' +
+      '</g>' +
+      '<g class="bm-icon-rings">' +
+        '<circle cx="235" cy="95" r="14" stroke-width="9"/><circle cx="55" cy="105" r="11" stroke-width="7"/>' +
+        '<circle cx="100" cy="150" r="10" stroke-width="6"/><circle cx="155" cy="210" r="20" stroke-width="11"/>' +
+        '<circle cx="150" cy="145" r="11" stroke-width="7"/><circle cx="190" cy="255" r="10" stroke-width="6"/>' +
+      '</g>' +
+      '<g class="bm-icon-dots">' +
+        '<circle cx="150" cy="40" r="16"/><circle cx="35" cy="205" r="15"/><circle cx="85" cy="255" r="15"/>' +
+      '</g>' +
     '</svg>' +
-    '<span class="bm-hln" aria-hidden="true">HLN</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 2 Q100 38 194 2"/><path d="M30 2 Q100 26 170 2"/><path d="M54 2 Q100 16 146 2"/>' +
-    '</svg>' +
-    '<span class="bm-label" aria-hidden="true">e Equipamentos</span>' +
+    '<span class="bm-word" aria-hidden="true">CRP</span>' +
   '</div>';
 
 function buildOrcamentoHtml() {
@@ -643,9 +648,9 @@ function buildOrcamentoHtml() {
     '<div class="orcamento-header">' +
       '<div>' + BRAND_MARK_HTML +
         '<div class="orcamento-empresa-dados">' +
-          'HLN Embalagens e Equipamentos<br>' +
-          'CNPJ: ' + HLN_DADOS_EMPRESA.cnpj + '<br>' +
-          HLN_DADOS_EMPRESA.endereco +
+          EMPRESA_CONFIG.nome + '<br>' +
+          (EMPRESA_CONFIG.cnpj ? 'CNPJ: ' + EMPRESA_CONFIG.cnpj + '<br>' : '') +
+          EMPRESA_CONFIG.endereco +
         '</div>' +
       '</div>' +
       '<div class="orcamento-titulo"><h1>ORÇAMENTO</h1>Data: ' + dataStr + '</div>' +
@@ -667,7 +672,7 @@ function buildOrcamentoHtml() {
       ' &nbsp; <strong>Forma de pagamento:</strong> ' + formaPagamentoTexto + '</p>' +
     '<p><strong>Valor total:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar').value) + '</p>' +
     (deveMostrarDescontoVista() ? '<p><strong>Total à vista:</strong> ' + formatBRL(document.getElementById('valor_total_a_pagar_vista').value) + '</p>' : '') +
-    (deveMostrarChavePix() ? '<p><strong>Chave PIX:</strong> 66878650000142</p>' : '') +
+    (deveMostrarChavePix() ? '<p><strong>Chave PIX:</strong> ' + EMPRESA_CONFIG.chavePix + '</p>' : '') +
   '</div>';
 }
 
@@ -684,7 +689,7 @@ document.getElementById('btn-imprimir').addEventListener('click', function () {
   // O nome sugerido ao salvar como PDF vem do document.title — troca temporariamente
   // para o nome do cliente, assim os PDFs saem identificados em vez de todos com o mesmo nome.
   var nomeCliente = selectedCliente.razao_social || selectedCliente.nome_fantasia || 'Pedido';
-  document.title = nomeCliente + ' - Gestão CRM';
+  document.title = nomeCliente + ' - CRP';
 
   window.print();
 });
@@ -726,7 +731,7 @@ document.getElementById('orcamento-preview-confirmar').addEventListener('click',
   document.getElementById('print-sheet').innerHTML = ''; // evita sobrepor com um romaneio gerado antes
 
   var nomeCliente = selectedCliente.razao_social || selectedCliente.nome_fantasia || 'Orcamento';
-  document.title = 'Orçamento - ' + nomeCliente + ' - Gestão CRM';
+  document.title = 'Orçamento - ' + nomeCliente + ' - CRP';
 
   window.print();
 
