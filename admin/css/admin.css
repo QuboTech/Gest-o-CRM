@@ -165,6 +165,7 @@ body.admin-body {
 }
 .badge-warning { background: #fff3cd; color: #8a6100; }
 .badge-ok { background: #dff5e6; color: #0f7a3d; }
+.badge-danger { background: #fbe1e1; color: #a92323; }
 
 .toast {
   position: fixed;

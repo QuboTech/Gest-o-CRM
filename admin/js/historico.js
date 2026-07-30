@@ -1,7 +1,11 @@
 // Compartilhado entre pedido.html, clientes.html e assistencia-tecnica.html.
 
 var HISTORICO_STATUS_ASSISTENCIA_LABELS = {
-  aberta: 'Aberta', em_andamento: 'Em andamento', concluida: 'Concluída'
+  aberta: 'Aberta', em_andamento: 'Em andamento', concluida: 'Concluída', nao_aprovada: 'Não aprovado pelo cliente'
+};
+
+var HISTORICO_STATUS_ASSISTENCIA_BADGE = {
+  aberta: 'badge-warning', em_andamento: 'badge-warning', concluida: 'badge-ok', nao_aprovada: 'badge-danger'
 };
 
 var HISTORICO_FORMA_PAGAMENTO_LABELS = {
@@ -178,7 +182,7 @@ async function loadHistoricoAssistencias(clienteId, containerId) {
 
   conteudo.innerHTML = data.map(function (a) {
     var dataStr = new Date(a.created_at).toLocaleDateString('pt-BR');
-    var badgeClass = a.status === 'concluida' ? 'badge-ok' : 'badge-warning';
+    var badgeClass = HISTORICO_STATUS_ASSISTENCIA_BADGE[a.status] || 'badge-warning';
     var badgeText = HISTORICO_STATUS_ASSISTENCIA_LABELS[a.status] || a.status;
     var eq = a.equipamentos || {};
     var equipamento = [eq.marca, eq.modelo].filter(Boolean).join(' ') || '—';
@@ -189,6 +193,7 @@ async function loadHistoricoAssistencias(clienteId, containerId) {
         '<strong>Equipamento:</strong> ' + equipamento + ' &nbsp; <strong>Nº de Série:</strong> ' + (eq.numero_serie || '—') +
       '</p>' +
       '<p style="margin:0 0 8px; font-size:0.88rem;"><strong>Defeito:</strong> ' + (a.descricao_defeito || '—') + '</p>' +
+      (a.resolucao ? '<p style="margin:0 0 8px; font-size:0.88rem;"><strong>Resolução:</strong> ' + a.resolucao + '</p>' : '') +
       '<div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">' +
         '<button type="button" class="btn btn-outline" style="padding:6px 12px; font-size:0.78rem;" data-editar-assistencia="' + a.id + '">Editar</button>' +
       '</div>' +

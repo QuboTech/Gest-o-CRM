@@ -72,6 +72,7 @@
             <option value="aberta">Aberta</option>
             <option value="em_andamento">Em andamento</option>
             <option value="concluida">Concluída</option>
+            <option value="nao_aprovada">Não aprovado pelo cliente</option>
           </select>
         </div>
       </div>
@@ -125,6 +126,15 @@
         <div class="form-field">
           <label for="lacre_novo">Lacre Novo</label>
           <input type="text" id="lacre_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        </div>
+      </div>
+
+      <h2 style="margin-top:8px;">Resolução / Fechamento do Chamado</h2>
+      <div class="form-grid" style="margin-bottom:8px;">
+        <div class="form-field span-full">
+          <label for="resolucao">Resolução <span id="resolucao-obrigatoria-hint" style="display:none;">*</span></label>
+          <textarea id="resolucao" rows="4" maxlength="5000" placeholder="O que foi feito para resolver, ou o motivo de não ter sido aprovado pelo cliente."></textarea>
+          <span class="hint"><span id="resolucao-contador">0</span>/5000 caracteres — obrigatório para fechar o chamado como Concluída ou Não aprovado.</span>
         </div>
       </div>
 

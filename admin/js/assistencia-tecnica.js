@@ -13,14 +13,18 @@ var QUANTIDADE_PECA_REGEX = /^\d{1,5}(\.\d{1,2})?$/;
 var STATUS_LABELS = {
   aberta: 'Aberta',
   em_andamento: 'Em andamento',
-  concluida: 'Concluída'
+  concluida: 'Concluída',
+  nao_aprovada: 'Não aprovado pelo cliente'
 };
 
 var STATUS_BADGE_CLASS = {
   aberta: 'badge-warning',
   em_andamento: 'badge-warning',
-  concluida: 'badge-ok'
+  concluida: 'badge-ok',
+  nao_aprovada: 'badge-danger'
 };
+
+var STATUS_FECHAMENTO = ['concluida', 'nao_aprovada'];
 
 function formatarQuantidadeLocal(q) {
   var n = parseFloat(q);
@@ -61,6 +65,8 @@ function resetForm() {
   document.getElementById('select-equipamento').disabled = true;
   document.getElementById('assistencia-save-btn').textContent = 'Salvar assistência técnica';
   atualizarContadorDescricao();
+  atualizarContadorResolucao();
+  atualizarHintResolucao();
 }
 
 /* ===================== CLIENTE ===================== */
@@ -398,6 +404,21 @@ function atualizarContadorDescricao() {
 }
 document.getElementById('descricao_defeito').addEventListener('input', atualizarContadorDescricao);
 
+/* ===================== RESOLUÇÃO / FECHAMENTO DO CHAMADO ===================== */
+
+function atualizarContadorResolucao() {
+  var valor = document.getElementById('resolucao').value;
+  document.getElementById('resolucao-contador').textContent = valor.length;
+}
+document.getElementById('resolucao').addEventListener('input', atualizarContadorResolucao);
+
+function atualizarHintResolucao() {
+  var status = document.getElementById('status').value;
+  var precisaFechar = STATUS_FECHAMENTO.indexOf(status) !== -1;
+  document.getElementById('resolucao-obrigatoria-hint').style.display = precisaFechar ? 'inline' : 'none';
+}
+document.getElementById('status').addEventListener('change', atualizarHintResolucao);
+
 /* ===================== LISTAGEM ===================== */
 
 async function loadAssistencias() {
@@ -486,6 +507,7 @@ async function preencherFormularioParaEdicao(a) {
   document.getElementById('lacre_antigo').value = a.lacre_antigo || '';
   document.getElementById('lacre_novo').value = a.lacre_novo || '';
   document.getElementById('status').value = a.status || 'aberta';
+  document.getElementById('resolucao').value = a.resolucao || '';
 
   if (!pecasCache.length) await loadPecasSelect();
   document.getElementById('select-peca').value = a.peca_id || '';
@@ -504,6 +526,8 @@ async function preencherFormularioParaEdicao(a) {
   }
 
   atualizarContadorDescricao();
+  atualizarContadorResolucao();
+  atualizarHintResolucao();
   document.getElementById('form-title').textContent = 'Editar assistência técnica nº ' + a.numero;
   document.getElementById('pagina-titulo').textContent = 'Editando Assistência Técnica nº ' + a.numero;
   document.getElementById('edicao-banner-texto').textContent = '✏️ Editando Assistência Técnica nº ' + a.numero;
@@ -604,6 +628,19 @@ function validarAssistencia(errorEl) {
     return false;
   }
 
+  var status = document.getElementById('status').value;
+  var resolucao = document.getElementById('resolucao').value.trim();
+  if (STATUS_FECHAMENTO.indexOf(status) !== -1 && !resolucao) {
+    errorEl.textContent = 'Informe a Resolução para fechar o chamado como "' + STATUS_LABELS[status] + '".';
+    errorEl.style.display = 'block';
+    return false;
+  }
+  if (resolucao.length > 5000) {
+    errorEl.textContent = 'Resolução excede o limite de 5000 caracteres.';
+    errorEl.style.display = 'block';
+    return false;
+  }
+
   return true;
 }
 
@@ -624,11 +661,22 @@ async function salvarAssistencia() {
   var lacreNovo = validarCampoAlfanumerico('lacre_novo', 'Lacre novo', errorEl, false);
   if (lacreNovo === null) return null;
 
+  var statusValor = document.getElementById('status').value || 'aberta';
+  var resolucao = document.getElementById('resolucao').value.trim();
+
   var pecaId = document.getElementById('select-peca').value || null;
   var quantidadePecaStr = document.getElementById('quantidade_peca_utilizada').value.trim();
   var quantidadePeca = quantidadePecaStr ? parseFloat(quantidadePecaStr) : null;
 
-  if (pecaId) {
+  if (statusValor === 'nao_aprovada' && pecaId) {
+    // Reparo não aprovado pelo cliente: nenhuma peça foi de fato utilizada,
+    // então não faz sentido manter a baixa no estoque.
+    showToast('Cliente não aprovou o reparo — a peça selecionada foi removida do chamado e o estoque não será afetado.', 'warning');
+    pecaId = null;
+    quantidadePeca = null;
+    document.getElementById('select-peca').value = '';
+    document.getElementById('quantidade_peca_utilizada').value = '';
+  } else if (pecaId) {
     var peca = pecasCache.find(function (p) { return p.id === pecaId; });
     if (peca && quantidadePeca > parseFloat(peca.quantidade)) {
       showToast('Atenção: a quantidade utilizada é maior que o estoque atual dessa peça (' + formatarQuantidadeLocal(peca.quantidade) + '). O estoque vai ficar negativo.', 'warning');
@@ -643,7 +691,8 @@ async function salvarAssistencia() {
     selo_novo: seloNovo || null,
     lacre_antigo: lacreAntigo || null,
     lacre_novo: lacreNovo || null,
-    status: document.getElementById('status').value || 'aberta',
+    status: statusValor,
+    resolucao: resolucao || null,
     peca_id: pecaId,
     quantidade_peca_utilizada: quantidadePeca
   };
@@ -712,6 +761,7 @@ function buildAssistenciaViaHtml(assistencia, label) {
     '<p><strong>SELO ANTIGO:</strong> ' + (assistencia.selo_antigo || '—') + ' &nbsp; <strong>SELO NOVO:</strong> ' + (assistencia.selo_novo || '—') + '</p>' +
     '<p><strong>LACRE ANTIGO:</strong> ' + (assistencia.lacre_antigo || '—') + ' &nbsp; <strong>LACRE NOVO:</strong> ' + (assistencia.lacre_novo || '—') + '</p>' +
     '<p><strong>STATUS:</strong> ' + (STATUS_LABELS[assistencia.status] || assistencia.status || '') + '</p>' +
+    (assistencia.resolucao ? '<p><strong>RESOLUÇÃO:</strong><br>' + assistencia.resolucao.replace(/\n/g, '<br>') + '</p>' : '') +
     '<div style="margin-top:40px; padding-top:10px; border-top:1px solid #000;">Assinatura do Cliente: _______________________________________________ &nbsp;&nbsp; Data: ___/___/_____</div>' +
   '</div>';
 }
