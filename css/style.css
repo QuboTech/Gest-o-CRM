@@ -78,41 +78,24 @@ h1, h2, h3 {
 
 .btn-block { width: 100%; }
 
-/* ===== BRAND MARK (logo em HTML/CSS real, mesma fonte e cores do site) =====
-   Escala inteira via font-size (em/%): font-size do .brand-mark = largura/100,
-   assim os filhos (em Xem) reproduzem sempre a mesma proporção sem depender
-   de container queries (que geram referência circular dentro de flex/grid). */
+/* ===== BRAND MARK (logo oficial CRP: ícone + wordmark, fundo navy já embutido na imagem) ===== */
 .brand-mark {
-  background: var(--navy-900);
   aspect-ratio: 1 / 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5em;
-  padding: 6em;
+  display: block;
   flex-shrink: 0;
 }
 
-.bm-word {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  color: var(--white);
-  font-size: 28em;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.bm-icon {
-  width: 60%;
-  height: auto;
+.bm-mark-full {
+  width: 100%;
+  height: 100%;
   display: block;
+  border-radius: 8px;
 }
 
-.brand-mark--header { width: 54px; font-size: 0.54px; }
-.brand-mark--hero { width: 100%; max-width: 320px; font-size: 3.2px; }
-.brand-mark--footer { width: 60px; font-size: 0.6px; }
-.brand-mark--sm { width: 120px; font-size: 1.2px; }
+.brand-mark--header { width: 54px; }
+.brand-mark--hero { width: 100%; max-width: 320px; }
+.brand-mark--footer { width: 60px; }
+.brand-mark--sm { width: 120px; }
 
 /* ===== HERO (usado como landing enxuta e páginas de aviso/erro) ===== */
 .hero {
