@@ -1,11 +1,11 @@
 // Compartilhado entre pedido.html, clientes.html e assistencia-tecnica.html.
 
 var HISTORICO_STATUS_ASSISTENCIA_LABELS = {
-  aberta: 'Aberta', em_andamento: 'Em andamento', concluida: 'Concluída', nao_aprovada: 'Não aprovado pelo cliente'
+  aberta: 'Aberta', em_andamento: 'Em andamento', pendente: 'Pendente', concluida: 'Concluída', nao_aprovada: 'Não aprovado pelo cliente'
 };
 
 var HISTORICO_STATUS_ASSISTENCIA_BADGE = {
-  aberta: 'badge-warning', em_andamento: 'badge-warning', concluida: 'badge-ok', nao_aprovada: 'badge-danger'
+  aberta: 'badge-warning', em_andamento: 'badge-warning', pendente: 'badge-warning', concluida: 'badge-ok', nao_aprovada: 'badge-danger'
 };
 
 var HISTORICO_FORMA_PAGAMENTO_LABELS = {

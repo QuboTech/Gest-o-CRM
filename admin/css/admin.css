@@ -255,6 +255,56 @@ body.admin-body {
 .filtro-status-btn:hover { background: var(--off-white); }
 .filtro-status-btn.active { background: var(--navy-900); color: var(--white); border-color: var(--navy-900); }
 
+/* ===== DASHBOARD DE ASSISTÊNCIAS (cards) ===== */
+.assistencia-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.assistencia-card {
+  border: 1px solid var(--off-white);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+.assistencia-card-topo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.assistencia-card-topo strong { color: var(--navy-900); }
+.sla-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.sla-verde { background: #0f7a3d; }
+.sla-amarelo { background: #c98a00; }
+.sla-vermelho { background: #a92323; }
+.assistencia-card-cliente { font-weight: 700; color: var(--navy-900); font-size: 0.95rem; }
+.assistencia-card-equip,
+.assistencia-card-data { font-size: 0.8rem; color: var(--gray-400); }
+.assistencia-card-resumo {
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  flex-grow: 1;
+  overflow-wrap: break-word;
+}
+.assistencia-card-acoes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--off-white);
+}
+.assistencia-card-acoes button {
+  background: none;
+  border: none;
+  color: var(--blue-accent);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+.assistencia-card-acoes button.danger { color: #a92323; }
+
 /* ===== ITENS DE PEDIDO (vácuo + gerais) ===== */
 .item-row {
   display: grid;

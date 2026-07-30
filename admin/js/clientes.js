@@ -71,6 +71,19 @@ async function loadClientes() {
   renderClientesTable(allClientes);
 }
 
+/* Suporte a clientes.html?editar=ID — usado pelo atalho "Editar cliente" na Assistência Técnica */
+function iniciarEdicaoClientePorId(clienteId) {
+  var cliente = allClientes.find(function (c) { return c.id === clienteId; });
+  if (!cliente) {
+    showToast('Cliente não encontrado para edição.', 'error');
+    return;
+  }
+  document.getElementById('cliente-id').value = cliente.id;
+  setFormValues(cliente);
+  document.getElementById('form-title').textContent = 'Editar cliente';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function renderClientesTable(list) {
   var tbody = document.getElementById('clientes-tbody');
   if (!list.length) {
@@ -354,7 +367,13 @@ document.getElementById('cliente-cancel-btn').addEventListener('click', resetFor
   var auth = await window.ADMIN_AUTH_READY;
   if (!auth) return;
   currentUserId = auth.session.user.id;
-  loadClientes();
+  await loadClientes();
+
+  var params = new URLSearchParams(location.search);
+  var editarId = params.get('editar');
+  if (editarId) {
+    iniciarEdicaoClientePorId(editarId);
+  }
 })();
 
 /* ===================== HISTÓRICO DE COMPRAS ===================== */

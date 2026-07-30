@@ -1,4 +1,5 @@
 var currentUserId = null;
+var currentUserIsAdmin = false;
 var clientesCache = [];
 var equipamentosCache = [];
 var pecasCache = [];
@@ -6,6 +7,8 @@ var allAssistencias = [];
 var selectedClienteAssistencia = null;
 var selectedEquipamento = null;
 var assistenciaEmEdicaoId = null;
+var assistenciaPausadoEmCarregado = null;
+var assistenciaStatusCarregado = null;
 
 var ALFANUMERICO_REGEX = /^[A-Za-z0-9]{1,20}$/;
 var QUANTIDADE_PECA_REGEX = /^\d{1,5}(\.\d{1,2})?$/;
@@ -13,6 +16,7 @@ var QUANTIDADE_PECA_REGEX = /^\d{1,5}(\.\d{1,2})?$/;
 var STATUS_LABELS = {
   aberta: 'Aberta',
   em_andamento: 'Em andamento',
+  pendente: 'Pendente',
   concluida: 'Concluída',
   nao_aprovada: 'Não aprovado pelo cliente'
 };
@@ -20,11 +24,48 @@ var STATUS_LABELS = {
 var STATUS_BADGE_CLASS = {
   aberta: 'badge-warning',
   em_andamento: 'badge-warning',
+  pendente: 'badge-warning',
   concluida: 'badge-ok',
   nao_aprovada: 'badge-danger'
 };
 
 var STATUS_FECHAMENTO = ['concluida', 'nao_aprovada'];
+
+/* ===================== PRAZO (SLA): bullet verde/amarelo/vermelho =====================
+   Verde: até 24h (prazo de atendimento). Amarelo: 24h–36h (prazo de solução).
+   Vermelho: acima de 36h, OU 72h+ sem nenhuma atualização (chamado esquecido).
+   "Pendente" congela o cálculo no momento em que foi pausado. Fechado (concluída/
+   não aprovada) fica com a cor referente ao tempo que levou até fechar. */
+function calcularSlaAssistencia(a) {
+  var criadoEm = new Date(a.created_at);
+
+  if (a.status === 'concluida' || a.status === 'nao_aprovada') {
+    var horasFechamento = (new Date(a.updated_at) - criadoEm) / 3600000;
+    return corPorHoras(horasFechamento);
+  }
+
+  var horasSemMexer = (Date.now() - new Date(a.updated_at)) / 3600000;
+  if (horasSemMexer > 72) {
+    return { cor: 'vermelho', label: 'Sem atualização há mais de 72h' };
+  }
+
+  if (a.status === 'pendente') {
+    var referenciaPausa = a.pausado_em || a.updated_at;
+    var horasPendente = (new Date(referenciaPausa) - criadoEm) / 3600000;
+    var resultado = corPorHoras(horasPendente);
+    resultado.label += ' (pausado)';
+    return resultado;
+  }
+
+  var horas = (Date.now() - criadoEm) / 3600000;
+  return corPorHoras(horas);
+}
+
+function corPorHoras(horas) {
+  if (horas < 24) return { cor: 'verde', label: 'Dentro do prazo de atendimento (24h)' };
+  if (horas < 36) return { cor: 'amarelo', label: 'Prazo de atendimento (24h) estourado' };
+  return { cor: 'vermelho', label: 'Prazo de solução (36h) estourado' };
+}
 
 function formatarQuantidadeLocal(q) {
   var n = parseFloat(q);
@@ -50,6 +91,8 @@ function resetForm() {
   document.getElementById('assistencia-form').reset();
   document.getElementById('assistencia-id').value = '';
   assistenciaEmEdicaoId = null;
+  assistenciaPausadoEmCarregado = null;
+  assistenciaStatusCarregado = null;
   selectedClienteAssistencia = null;
   selectedEquipamento = null;
   equipamentosCache = [];
@@ -108,6 +151,7 @@ async function selecionarCliente(clienteId) {
     (c.cnpj_cpf ? 'CNPJ/CPF: ' + c.cnpj_cpf + '<br>' : '') +
     (c.contato_nome ? 'Contato: ' + c.contato_nome +
       (c.contato_telefone ? ' — ' + c.contato_telefone : '') : '');
+  document.getElementById('link-editar-cliente').href = 'clientes.html?editar=' + c.id;
   resumo.style.display = 'block';
 
   await loadEquipamentosDoCliente(clienteId);
@@ -424,7 +468,7 @@ document.getElementById('status').addEventListener('change', atualizarHintResolu
 async function loadAssistencias() {
   var { data, error } = await supabaseClient
     .from('assistencias_tecnicas')
-    .select('*, clientes(razao_social, nome_fantasia), equipamentos(marca, modelo, numero_serie)')
+    .select('*, clientes(razao_social, nome_fantasia, cnpj_cpf, contato_nome, contato_telefone, logradouro, numero, complemento, bairro, municipio, uf), equipamentos(marca, modelo, numero_serie), estoque_pecas(codigo, tipo_modelo)')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -441,32 +485,48 @@ function nomeClienteAssistencia(a) {
   return a.clientes.razao_social + (a.clientes.nome_fantasia ? ' (' + a.clientes.nome_fantasia + ')' : '');
 }
 
-function renderAssistenciasTable(list) {
-  var tbody = document.getElementById('assistencias-tbody');
+function renderAssistenciasDashboard(list) {
+  var container = document.getElementById('assistencia-dashboard');
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7">Nenhuma assistência técnica registrada ainda.</td></tr>';
+    container.innerHTML = '<p style="color:var(--gray-400);">Nenhuma assistência técnica registrada ainda.</p>';
     return;
   }
 
-  tbody.innerHTML = list.map(function (a) {
+  container.innerHTML = list.map(function (a) {
     var dataStr = new Date(a.created_at).toLocaleDateString('pt-BR');
     var badgeClass = STATUS_BADGE_CLASS[a.status] || 'badge-warning';
     var badgeText = STATUS_LABELS[a.status] || a.status;
-    return '<tr>' +
-      '<td>' + a.numero + '</td>' +
-      '<td>' + nomeClienteAssistencia(a) + '</td>' +
-      '<td>' + equipamentoTexto(a) + '</td>' +
-      '<td>' + numeroSerieTexto(a) + '</td>' +
-      '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
-      '<td>' + dataStr + '</td>' +
-      '<td class="row-actions">' +
+    var sla = calcularSlaAssistencia(a);
+    var resumo = (a.descricao_defeito || '').slice(0, 140) + ((a.descricao_defeito || '').length > 140 ? '…' : '');
+
+    return '<div class="assistencia-card" data-id="' + a.id + '">' +
+      '<div class="assistencia-card-topo">' +
+        '<span class="sla-dot sla-' + sla.cor + '" title="' + sla.label + '"></span>' +
+        '<strong>Nº ' + a.numero + '</strong>' +
+        '<span class="badge ' + badgeClass + '">' + badgeText + '</span>' +
+      '</div>' +
+      '<div class="assistencia-card-cliente">' + nomeClienteAssistencia(a) + '</div>' +
+      '<div class="assistencia-card-equip">' + equipamentoTexto(a) + ' — Série: ' + numeroSerieTexto(a) + '</div>' +
+      '<p class="assistencia-card-resumo">' + (resumo || '—') + '</p>' +
+      '<div class="assistencia-card-data">' + dataStr + '</div>' +
+      '<div class="assistencia-card-acoes">' +
+        '<button data-consultar="' + a.id + '">Consultar</button>' +
         '<button data-edit="' + a.id + '">Editar</button>' +
-        '<button data-delete="' + a.id + '" class="danger">Excluir</button>' +
-      '</td>' +
-    '</tr>';
+        (currentUserIsAdmin ? '<button data-delete="' + a.id + '" class="danger">Excluir</button>' : '') +
+      '</div>' +
+    '</div>';
   }).join('');
 
-  tbody.querySelectorAll('[data-edit]').forEach(function (btn) {
+  container.querySelectorAll('[data-consultar]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var assistencia = allAssistencias.find(function (a) { return a.id === btn.dataset.consultar; });
+      if (!assistencia) return;
+      document.getElementById('consultar-assistencia-conteudo').innerHTML = buildConsultaHtml(assistencia);
+      document.getElementById('modal-consultar-assistencia').classList.add('open');
+    });
+  });
+
+  container.querySelectorAll('[data-edit]').forEach(function (btn) {
     btn.addEventListener('click', async function () {
       var assistencia = allAssistencias.find(function (a) { return a.id === btn.dataset.edit; });
       if (!assistencia) return;
@@ -475,8 +535,12 @@ function renderAssistenciasTable(list) {
     });
   });
 
-  tbody.querySelectorAll('[data-delete]').forEach(function (btn) {
+  container.querySelectorAll('[data-delete]').forEach(function (btn) {
     btn.addEventListener('click', async function () {
+      if (!currentUserIsAdmin) {
+        showToast('Somente um usuário administrador pode excluir assistências técnicas.', 'warning');
+        return;
+      }
       if (!confirm('Excluir esta assistência técnica? A peça utilizada (se houver) volta para o estoque automaticamente. Essa ação não pode ser desfeita.')) return;
       var { error } = await supabaseClient.from('assistencias_tecnicas').delete().eq('id', btn.dataset.delete);
       if (error) {
@@ -508,6 +572,8 @@ async function preencherFormularioParaEdicao(a) {
   document.getElementById('lacre_novo').value = a.lacre_novo || '';
   document.getElementById('status').value = a.status || 'aberta';
   document.getElementById('resolucao').value = a.resolucao || '';
+  assistenciaStatusCarregado = a.status || 'aberta';
+  assistenciaPausadoEmCarregado = a.pausado_em || null;
 
   if (!pecasCache.length) await loadPecasSelect();
   document.getElementById('select-peca').value = a.peca_id || '';
@@ -567,7 +633,7 @@ function aplicarFiltrosAssistencias() {
       String(a.numero).includes(term);
     return passaStatus && passaBusca;
   });
-  renderAssistenciasTable(filtered);
+  renderAssistenciasDashboard(filtered);
 }
 
 document.getElementById('assistencia-search').addEventListener('input', aplicarFiltrosAssistencias);
@@ -699,6 +765,16 @@ async function salvarAssistencia() {
     }
   }
 
+  // "Pendente" congela o prazo: guarda o momento em que entrou nesse status pela
+  // primeira vez, e preserva esse momento em salvamentos seguintes enquanto continuar
+  // pendente. Ao sair do pendente, o congelamento é limpo.
+  var pausadoEm = null;
+  if (statusValor === 'pendente') {
+    pausadoEm = (assistenciaStatusCarregado === 'pendente' && assistenciaPausadoEmCarregado)
+      ? assistenciaPausadoEmCarregado
+      : new Date().toISOString();
+  }
+
   var payload = {
     cliente_id: clienteId,
     equipamento_id: equipamentoId,
@@ -710,7 +786,8 @@ async function salvarAssistencia() {
     status: statusValor,
     resolucao: resolucao || null,
     peca_id: pecaId,
-    quantidade_peca_utilizada: quantidadePeca
+    quantidade_peca_utilizada: quantidadePeca,
+    pausado_em: pausadoEm
   };
 
   var assistenciaId = document.getElementById('assistencia-id').value;
@@ -730,6 +807,8 @@ async function salvarAssistencia() {
   }
 
   assistenciaEmEdicaoId = result.data.id;
+  assistenciaStatusCarregado = result.data.status;
+  assistenciaPausadoEmCarregado = result.data.pausado_em;
   document.getElementById('assistencia-id').value = result.data.id;
   return result.data;
 }
@@ -750,11 +829,41 @@ document.getElementById('assistencia-form').addEventListener('submit', async fun
   if (!assistencia) return;
 
   showToast((estavaEditando ? 'Assistência técnica nº ' + assistencia.numero + ' atualizada com sucesso.' : 'Assistência técnica nº ' + assistencia.numero + ' salva com sucesso.'), 'ok');
+  resetForm();
   loadAssistencias();
   loadPecasSelect();
 });
 
 document.getElementById('assistencia-cancel-btn').addEventListener('click', resetForm);
+
+/* ===================== CONSULTAR (OS somente leitura) ===================== */
+
+document.getElementById('consultar-assistencia-btn-fechar').addEventListener('click', function () {
+  document.getElementById('modal-consultar-assistencia').classList.remove('open');
+});
+
+function buildConsultaHtml(a) {
+  var cliente = a.clientes || {};
+  var equipamento = a.equipamentos || {};
+  var peca = a.estoque_pecas || null;
+  var dataStr = new Date(a.created_at).toLocaleDateString('pt-BR');
+  var enderecoCompleto = [
+    cliente.logradouro, cliente.numero, cliente.complemento, cliente.bairro, cliente.municipio, cliente.uf
+  ].filter(Boolean).join(', ');
+  var sla = calcularSlaAssistencia(a);
+
+  return '<p><strong>Nº:</strong> ' + a.numero + ' &nbsp; <strong>Status:</strong> <span class="badge ' + (STATUS_BADGE_CLASS[a.status] || 'badge-warning') + '">' + (STATUS_LABELS[a.status] || a.status) + '</span> ' +
+      '&nbsp; <span class="sla-dot sla-' + sla.cor + '" title="' + sla.label + '" style="display:inline-block; vertical-align:middle;"></span> <span style="font-size:0.85rem; color:var(--gray-400);">' + sla.label + '</span></p>' +
+    '<p><strong>Data de abertura:</strong> ' + dataStr + '</p>' +
+    '<p><strong>Cliente:</strong> ' + (cliente.razao_social || '') + (cliente.nome_fantasia ? ' (' + cliente.nome_fantasia + ')' : '') + '</p>' +
+    (enderecoCompleto ? '<p><strong>Endereço:</strong> ' + enderecoCompleto + '</p>' : '') +
+    '<p><strong>CNPJ/CPF:</strong> ' + (cliente.cnpj_cpf || '—') + ' &nbsp; <strong>Contato:</strong> ' + (cliente.contato_nome || '—') + (cliente.contato_telefone ? ' — ' + cliente.contato_telefone : '') + '</p>' +
+    '<p><strong>Equipamento:</strong> ' + ([equipamento.marca, equipamento.modelo].filter(Boolean).join(' ') || '—') + ' &nbsp; <strong>Nº de Série:</strong> ' + (equipamento.numero_serie || '—') + '</p>' +
+    '<p><strong>Descrição do Defeito:</strong><br>' + (a.descricao_defeito || '—').replace(/\n/g, '<br>') + '</p>' +
+    (peca ? '<p><strong>Peça utilizada:</strong> ' + peca.codigo + ' — ' + peca.tipo_modelo + ' &nbsp; <strong>Qtd:</strong> ' + formatarQuantidadeLocal(a.quantidade_peca_utilizada) + '</p>' : '') +
+    '<p><strong>Selo:</strong> antigo ' + (a.selo_antigo || '—') + ' / novo ' + (a.selo_novo || '—') + ' &nbsp; <strong>Lacre:</strong> antigo ' + (a.lacre_antigo || '—') + ' / novo ' + (a.lacre_novo || '—') + '</p>' +
+    (a.resolucao ? '<p><strong>Resolução:</strong><br>' + a.resolucao.replace(/\n/g, '<br>') + '</p>' : '');
+}
 
 /* ===================== IMPRESSÃO (2 vias) ===================== */
 
@@ -821,10 +930,14 @@ window.addEventListener('afterprint', function () {
   var auth = await window.ADMIN_AUTH_READY;
   if (!auth) return;
   currentUserId = auth.session.user.id;
+  currentUserIsAdmin = !!auth.profile.is_admin;
   await loadClientesSelect();
   await loadPecasSelect();
   await loadAssistencias();
   atualizarContadorDescricao();
+
+  // Recalcula os bullets de prazo periodicamente, sem precisar recarregar do banco.
+  setInterval(aplicarFiltrosAssistencias, 60000);
 
   var params = new URLSearchParams(location.search);
   var editarId = params.get('editar');
