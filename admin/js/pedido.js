@@ -597,9 +597,8 @@ function buildViaHtml(label) {
 /* ===================== ORÇAMENTO (A4, papel timbrado) ===================== */
 
 var BRAND_MARK_HTML =
-  '<div class="brand-mark" role="img" aria-label="' + EMPRESA_CONFIG.nome + '">' +
-    '<img class="bm-icon" src="../assets/img/logo-icon.png" alt="">' +
-    '<span class="bm-word" aria-hidden="true">CRP</span>' +
+  '<div class="brand-mark">' +
+    '<img class="bm-mark-full" src="../assets/img/logo-full.png" alt="' + EMPRESA_CONFIG.nome + '">' +
   '</div>';
 
 function buildOrcamentoHtml() {

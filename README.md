@@ -22,7 +22,7 @@ Tudo que muda de cliente para cliente está centralizado em poucos lugares:
 - `admin/js/admin-config.js` → `ADMIN_CONFIG` (projeto Supabase do cliente)
   e `EMPRESA_CONFIG` (nome, CNPJ, endereço, chave PIX — usados nos
   impressos de pedido/orçamento/assistência técnica).
-- `assets/img/logo.svg` e o bloco `.brand-mark` (HTML/CSS, reaproveitado em
+- `assets/img/logo-full.png` e o bloco `.brand-mark` (reaproveitado em
   `admin/login.html`, `admin/trocar-senha.html`, `index.html`, `404.html` e
   no orçamento impresso) — trocar pela identidade visual do cliente.
 - Banco de dados: criar um projeto Supabase novo e aplicar as migrações
