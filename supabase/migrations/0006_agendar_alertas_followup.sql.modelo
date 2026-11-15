@@ -1,0 +1,17 @@
+-- MODELO (NÃO aplicado): agenda a edge function alertas-followup a cada 30 minutos.
+-- Só aplicar depois de publicar a function (supabase/functions/alertas-followup) e definir o secret RESEND_API_KEY.
+-- Trocar a URL do projeto e a anon key pública (Project Settings > API) e renomear este arquivo para .sql.
+select cron.schedule(
+  'alertas-followup',
+  '*/30 * * * *',
+  $$
+  select net.http_post(
+    url := 'https://SEU-PROJETO.supabase.co/functions/v1/alertas-followup',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer SUA-CHAVE-PUBLICA'
+    ),
+    body := '{}'::jsonb
+  );
+  $$
+);

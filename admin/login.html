@@ -5,16 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login — Gestão CRM</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/tema.css">
 </head>
-<body class="admin-body">
+<body class="admin-body login-page">
 
 <div class="login-shell">
   <div class="login-card">
-    <img src="../assets/img/logo.svg" alt="Gestão CRM" style="width:180px;max-width:70%;display:block;margin:0 auto 16px;border-radius:12px;">
+    <div class="brand-mark">
+      <img src="../assets/img/logo.svg" alt="Gestão CRM">
+    </div>
     <h1>Portal Administrativo</h1>
 
     <form id="login-form">
@@ -60,7 +63,7 @@
       return;
     }
 
-    location.href = 'pedido.html';
+    location.href = 'dashboard.html';
   });
 </script>
 </body>

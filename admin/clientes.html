@@ -5,22 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clientes — Gestão CRM</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/tema.css">
 </head>
 <body class="admin-body">
 
-<header class="admin-header">
-  <div class="admin-brand">Gestão CRM</div>
-  <nav class="admin-nav">
-    <a href="pedido.html">Pedido</a>
-    <a href="clientes.html" class="active">Clientes</a>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="financeiro.html">Financeiro</a>
-    <a href="calculadora-custo.html">Calculadora de Custo</a>
-  </nav>
+<header class="admin-header no-print">
+  <a href="dashboard.html" class="admin-brand"><img src="../assets/img/logo-branca.svg" alt="Gestão CRM"></a>
+  <nav class="admin-nav" data-menu></nav>
   <div class="admin-user">
     <span>Olá, <span data-user-name>—</span></span>
     <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
@@ -28,7 +23,7 @@
   </div>
 </header>
 
-<main class="admin-main">
+<main class="admin-main no-print">
   <h1 class="admin-title">Clientes</h1>
 
   <div class="admin-card">
@@ -38,24 +33,60 @@
 
       <div class="form-grid" style="margin-bottom:20px;">
         <div class="form-field">
+          <label for="eh_cliente">Tipo * <span style="font-weight:400; color:var(--gray-400);">— defina primeiro</span></label>
+          <select id="eh_cliente">
+            <option value="false">Lead (funis)</option>
+            <option value="true">Cliente da Oficina (Assistência Técnica)</option>
+          </select>
+        </div>
+        <div class="form-field span-2">
+          <label for="razao_social">Nome *</label>
+          <input type="text" id="razao_social" required>
+        </div>
+        <div class="form-field">
+          <label for="categoria">Categoria (funil)</label>
+          <select id="categoria">
+            <option value="">— Sem categoria —</option>
+            <option value="venda">Venda</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="pos_venda">Pós-venda</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="canal_aquisicao">Canal de aquisição</label>
+          <select id="canal_aquisicao"></select>
+        </div>
+        <div class="form-field">
+          <label for="situacao">Situação</label>
+          <select id="situacao"></select>
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="telefone_empresa">Telefone</label>
+          <input type="text" id="telefone_empresa">
+        </div>
+        <div class="form-field">
+          <label for="email_empresa">E-mail</label>
+          <input type="email" id="email_empresa">
+        </div>
+        <div class="form-field">
           <label for="codigo">Código interno</label>
           <input type="text" id="codigo">
           <span class="hint">Opcional.</span>
         </div>
+      </div>
+      <p style="font-size:0.82rem; color:var(--gray-400); margin:-12px 0 20px;">Preencha pelo menos o telefone ou o e-mail.</p>
+
+      <div class="form-grid" style="margin-bottom:20px;">
         <div class="form-field span-2">
           <label for="cnpj_cpf">CNPJ / CPF</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <input type="text" id="cnpj_cpf" placeholder="00.000.000/0000-00" style="flex:1; min-width:0;">
             <button type="button" id="btn-buscar-cnpj" class="btn btn-outline" style="white-space:nowrap;">Buscar CNPJ</button>
           </div>
-          <span class="hint" id="cnpj-status"></span>
-        </div>
-      </div>
-
-      <div class="form-grid" style="margin-bottom:20px;">
-        <div class="form-field span-2">
-          <label for="razao_social">Razão Social *</label>
-          <input type="text" id="razao_social" required>
+          <span class="hint" id="cnpj-status">Opcional.</span>
         </div>
         <div class="form-field">
           <label for="nome_fantasia">Nome Fantasia</label>
@@ -67,7 +98,7 @@
         </div>
       </div>
 
-      <h2 style="margin-top:8px;">Endereço</h2>
+      <h2 style="margin-top:8px;">Endereço (opcional)</h2>
       <div class="form-grid" style="margin-bottom:20px;">
         <div class="form-field span-2">
           <label for="logradouro">Logradouro</label>
@@ -96,14 +127,6 @@
         <div class="form-field">
           <label for="uf">UF</label>
           <input type="text" id="uf" maxlength="2" style="text-transform:uppercase;">
-        </div>
-        <div class="form-field">
-          <label for="telefone_empresa">Telefone (empresa)</label>
-          <input type="text" id="telefone_empresa">
-        </div>
-        <div class="form-field">
-          <label for="email_empresa">E-mail (empresa)</label>
-          <input type="email" id="email_empresa">
         </div>
       </div>
 
@@ -158,15 +181,27 @@
 
   <div class="admin-card">
     <h2>Clientes cadastrados</h2>
+    <div class="form-actions" style="margin-top:0; margin-bottom:16px;">
+      <button type="button" class="btn btn-outline" id="btn-baixar-modelo-cliente">Baixar modelo de importação</button>
+      <button type="button" class="btn btn-outline" id="btn-abrir-importar-cliente">Importar planilha</button>
+    </div>
     <input type="text" id="cliente-search" class="table-search" placeholder="Buscar por nome, CNPJ...">
+    <select id="cliente-filtro-tipo" class="table-search" style="max-width:220px;">
+      <option value="">Todos</option>
+      <option value="true">Clientes da Oficina</option>
+      <option value="false">Leads</option>
+    </select>
     <div class="table-scroll">
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Razão Social</th>
-            <th>Nome Fantasia</th>
-            <th>CNPJ/CPF</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th>Canal</th>
+            <th>Prazo</th>
             <th>Contato</th>
+            <th>CNPJ/CPF</th>
             <th></th>
           </tr>
         </thead>
@@ -178,39 +213,38 @@
   </div>
 </main>
 
-<!-- MODAL HISTÓRICO DE COMPRAS -->
-<div class="modal-overlay" id="modal-historico">
+<!-- MODAL HISTÓRICO DE ASSISTÊNCIAS TÉCNICAS -->
+<div class="modal-overlay no-print" id="modal-historico-assistencia">
   <div class="modal-box" style="max-width:720px;">
-    <h3>Histórico de Compras — <span id="historico-cliente-nome"></span></h3>
-    <div id="historico-conteudo">Carregando...</div>
+    <h3>Histórico de Assistências Técnicas — <span id="historico-assistencia-cliente-nome"></span></h3>
+    <div id="historico-assistencia-conteudo">Carregando...</div>
     <div class="form-actions">
-      <button type="button" class="btn btn-outline" id="historico-btn-fechar">Fechar</button>
+      <button type="button" class="btn btn-outline" id="historico-assistencia-btn-imprimir">Imprimir</button>
+      <button type="button" class="btn btn-outline" id="historico-assistencia-btn-fechar">Fechar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL TRANSFERIR E EXCLUIR (cadastro duplicado com pedidos/orçamentos vinculados) -->
-<div class="modal-overlay" id="modal-merge-cliente">
-  <div class="modal-box" style="max-width:480px;">
-    <h3>Não foi possível excluir</h3>
-    <p style="margin-bottom:16px; color:var(--gray-700);">
-      <strong id="merge-cliente-nome"></strong> possui pedidos/orçamentos vinculados no histórico.
-      Para excluir esse cadastro duplicado, transfira o histórico dele para o cadastro correto primeiro.
+<!-- ÁREA DE IMPRESSÃO (histórico do cliente) -->
+<div class="print-sheet" id="print-sheet"></div>
+
+<!-- MODAL IMPORTAR PLANILHA DE CLIENTES -->
+<div class="modal-overlay" id="modal-importar-cliente">
+  <div class="modal-box" style="max-width:680px;">
+    <h3>Importar Clientes via Planilha</h3>
+    <p style="font-size:0.85rem; color:var(--gray-700); margin-bottom:14px;">
+      Use o modelo (botão "Baixar modelo de importação"), preencha as linhas e envie o arquivo .xlsx aqui.
+      Nome é obrigatório, junto com pelo menos telefone ou e-mail. Se o CNPJ/CPF já existir num cliente cadastrado, os dados desse cliente são atualizados em vez de criar um duplicado.
     </p>
-    <div class="form-field" style="margin-bottom:16px;">
-      <label for="merge-cliente-destino">Transferir histórico para</label>
-      <select id="merge-cliente-destino"></select>
+    <div class="form-field" style="margin-bottom:14px;">
+      <label for="importar-cliente-arquivo">Arquivo (.xlsx)</label>
+      <input type="file" id="importar-cliente-arquivo" accept=".xlsx,.xls">
     </div>
-    <p id="merge-cliente-error" class="error-message" style="display:none;"></p>
+    <div id="importar-cliente-preview" style="display:none; margin-bottom:14px; max-height:240px; overflow-y:auto; font-size:0.82rem;"></div>
+    <p id="importar-cliente-error" class="error-message" style="display:none;"></p>
     <div class="form-actions">
-      <button type="button" class="btn btn-primary" id="merge-cliente-confirmar">Transferir e excluir</button>
-      <button type="button" class="btn btn-outline" id="merge-cliente-cancelar">Cancelar</button>
-    </div>
-    <p style="margin-top:20px; padding-top:16px; border-top:1px solid var(--off-white); color:var(--gray-400); font-size:0.85rem;">
-      Ou, se preferir não manter esse histórico:
-    </p>
-    <div class="form-actions">
-      <button type="button" class="btn" style="background:#a92323; color:#fff;" id="merge-cliente-so-excluir">Excluir mesmo assim (perde o histórico)</button>
+      <button type="button" class="btn btn-primary" id="importar-cliente-btn-confirmar" disabled>Importar linhas</button>
+      <button type="button" class="btn btn-outline" id="importar-cliente-btn-cancelar">Cancelar</button>
     </div>
   </div>
 </div>
@@ -220,10 +254,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/admin-config.js"></script>
 <script src="js/supabase-client.js"></script>
+<script src="js/modulos.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
-<script src="js/historico.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="js/cnpj.js"></script>
+<script src="js/planilha.js"></script>
+<script src="js/historico.js"></script>
+<script src="js/prazos.js"></script>
+<script src="js/geocodificar.js"></script>
+<script src="js/cliente-detalhe.js"></script>
+<script>
+  document.getElementById('canal_aquisicao').innerHTML = opcoesCanalHtml('');
+  document.getElementById('situacao').innerHTML = opcoesSituacaoHtml('ativo');
+</script>
 <script src="js/clientes.js"></script>
 </body>
 </html>

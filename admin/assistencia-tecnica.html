@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Chamados — Gestão CRM</title>
+<script>
+  // Assistência Técnica e Chamados viraram uma guia só: Chamados.
+  var id = new URLSearchParams(location.search).get('editar');
+  location.replace('chamados.html' + (id ? '?abrir=' + encodeURIComponent(id) : ''));
+</script>
+</head>
+<body><p>Abrindo <a href="chamados.html">Chamados</a>…</p></body>
+</html>

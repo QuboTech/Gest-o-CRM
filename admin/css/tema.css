@@ -1,0 +1,120 @@
+/* Tema do Chamado — cores e fonte.
+   Carregado depois de admin.css; troca só variáveis e o visual do cabeçalho/botões. */
+
+:root {
+  --marca: #1f4e8c;
+  --marca-escuro: #163a69;
+  --marca-preto: #1b1b18;
+
+  --navy-900: #1b1b18;
+  --navy-800: #262626;
+  --navy-700: #333330;
+  --navy-600: #4a4a46;
+  --turquoise: #1f4e8c;
+  --blue-accent: #1f4e8c;
+  --off-white: #f5f5f3;
+  --gray-100: #ececea;
+  --font-heading: 'Instrument Sans', Arial, sans-serif;
+  --font-body: 'Instrument Sans', Arial, sans-serif;
+  --radius: 10px;
+}
+
+body, body.admin-body { font-family: var(--font-body); }
+
+/* ===== Menu lateral esquerdo (o <header> vira a barra lateral) ===== */
+:root { --sidebar-w: 240px; }
+
+body.admin-body { padding-left: var(--sidebar-w); }
+.admin-main { min-width: 0; }
+
+.admin-header {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  z-index: 300;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 18px;
+  padding: 22px 14px 18px;
+  background: #000;
+  color: #fff;
+  border-right: 2px solid var(--marca);
+  overflow-y: auto;
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* Edge antigo */
+}
+.admin-header::-webkit-scrollbar { display: none; }  /* Chrome/Edge/Safari */
+.admin-brand { display: flex; justify-content: center; align-items: center; padding: 6px 6px 18px; border-bottom: 1px solid #2c2c28; }
+.admin-brand img { display: block; height: auto; width: 100%; max-width: 190px; margin: 0 auto; }
+
+.admin-nav { flex-direction: column; flex-wrap: nowrap; gap: 4px; flex: 1; }
+.admin-nav a {
+  display: block;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  border-left: 4px solid transparent;
+}
+.admin-nav a:hover { color: #fff; background: #26261f; border-left-color: var(--marca); }
+.admin-nav a.active { color: #fff; background: var(--marca); border-left-color: #fff; }
+
+.admin-user {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #2c2c28;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.admin-user a { color: #fff !important; font-weight: 700; }
+.admin-user a:hover { color: var(--marca) !important; }
+.admin-user button { color: #fff; font-weight: 700; border: 1px solid #fff; border-radius: 4px; width: 100%; background: transparent; }
+.admin-user button:hover { background: var(--marca); border-color: var(--marca); color: #fff; }
+
+/* Telas estreitas: a barra volta a ser um cabeçalho no topo */
+@media (max-width: 900px) {
+  body.admin-body { padding-left: 0; }
+  .admin-header {
+    position: static; width: auto; bottom: auto;
+    flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    border-right: 0; border-bottom: 2px solid var(--marca); padding: 12px 16px; gap: 10px;
+  }
+  .admin-brand { padding: 0; border: 0; }
+  .admin-brand img { height: 36px; width: auto; margin: 0; }
+  .admin-nav { flex-direction: row; flex-wrap: wrap; flex: 1 1 100%; gap: 4px; order: 3; }
+  .admin-nav a { padding: 7px 12px; font-size: 0.85rem; border-left: 0; }
+  .admin-user { flex-direction: row; align-items: center; border: 0; padding: 0; }
+  .admin-user button { width: auto; }
+}
+
+@media print {
+  body.admin-body { padding-left: 0; }
+  .admin-header { display: none; }
+}
+
+/* ===== Botões ===== */
+.btn { border-radius: 4px; }
+.btn-primary { background: var(--marca); color: #fff; box-shadow: none; }
+.btn-primary:hover { background: var(--marca-escuro); }
+.btn-outline { border-color: var(--marca-preto); color: var(--marca-preto); }
+.btn-outline:hover { background: var(--marca-preto); color: #fff; }
+
+/* ===== Login ===== */
+.login-page, body.admin-body.login-page { padding-left: 0; background: #000; }
+.login-shell { background: #000; min-height: 100vh; }
+.login-card { border-top: 4px solid var(--marca); border-radius: 6px; }
+.login-card .brand-mark { aspect-ratio: auto; width: auto; margin: 0 auto 24px; font-size: inherit; text-align: center; }
+.login-card .brand-mark img { display: block; margin: 0 auto; max-width: 260px; width: 100%; height: auto; }
+.login-card h1 { color: var(--marca-preto); }
+
+/* ===== Detalhes ===== */
+.filtro-status-btn.active { background: var(--marca-preto); border-color: var(--marca-preto); }
+.toast { background: var(--marca-preto); }
+
+.badge-ok { background: #dcf3e4; color: #1e6b3c; }
