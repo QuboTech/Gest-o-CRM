@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chamados — CRP</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ENTRAR -->
+<section id="view-login" class="tela tela-centro" hidden>
+  <div class="cartao-login">
+    <img src="../assets/img/logo-full.png" alt="CRP" class="logo-login">
+    <h1>Chamados</h1>
+    <form id="form-login" autocomplete="on">
+      <label for="login-usuario">Usuário</label>
+      <input id="login-usuario" type="text" autocomplete="username" autocapitalize="none" required>
+      <label for="login-senha">Senha</label>
+      <input id="login-senha" type="password" autocomplete="current-password" required>
+      <p id="login-erro" class="erro" hidden></p>
+      <button type="submit" class="btn btn-vermelho btn-bloco" id="login-btn">Entrar</button>
+    </form>
+  </div>
+</section>
+
+<!-- TROCA DE SENHA (primeiro acesso) -->
+<section id="view-troca" class="tela tela-centro" hidden>
+  <div class="cartao-login">
+    <h1>Crie sua senha</h1>
+    <p class="dica">Por segurança, troque a senha temporária antes de continuar.</p>
+    <form id="form-troca">
+      <label for="troca-senha">Nova senha</label>
+      <input id="troca-senha" type="password" minlength="6" autocomplete="new-password" required>
+      <label for="troca-senha2">Repita a nova senha</label>
+      <input id="troca-senha2" type="password" minlength="6" autocomplete="new-password" required>
+      <p id="troca-erro" class="erro" hidden></p>
+      <button type="submit" class="btn btn-vermelho btn-bloco">Salvar senha</button>
+    </form>
+  </div>
+</section>
+
+<!-- SEM ACESSO -->
+<section id="view-sem-acesso" class="tela tela-centro" hidden>
+  <div class="cartao-login">
+    <h1>Sem acesso</h1>
+    <p class="dica">Este app é para técnicos de campo e da oficina interna. Peça ao administrador para ajustar o seu perfil.</p>
+    <button type="button" class="btn btn-vermelho btn-bloco" data-sair>Sair</button>
+  </div>
+</section>
+
+<!-- AGENDA (tela principal) -->
+<section id="view-agenda" class="tela" hidden>
+  <header class="topo">
+    <img src="../assets/img/logo-full.png" alt="CRP" class="topo-logo">
+    <button type="button" class="topo-sair" data-sair>Sair</button>
+  </header>
+  <div class="saudacao">
+    <div><strong id="ag-nome">Olá</strong><span id="ag-sub" class="dica"></span></div>
+  </div>
+
+  <div id="abas" class="abas" hidden></div>
+
+  <div id="bloco-rota" class="rota" hidden>
+    <p class="dica" id="rota-info"></p>
+    <a class="btn btn-vermelho btn-bloco" id="rota-mapa" href="#" target="_blank" rel="noopener" hidden>Abrir rota no mapa</a>
+  </div>
+
+  <div id="agenda" class="lista"></div>
+</section>
+
+<!-- CHAMADO -->
+<section id="view-chamado" class="tela" hidden>
+  <header class="topo">
+    <button type="button" class="topo-voltar" id="btn-voltar">‹ Agenda</button>
+    <strong id="ch-titulo">Chamado</strong>
+    <span></span>
+  </header>
+  <div class="detalhe">
+    <div class="caixa" id="ch-cliente"></div>
+    <div class="caixa" id="ch-dados"></div>
+    <div class="caixa" id="ch-itens" hidden></div>
+    <div id="ch-acoes" class="acoes"></div>
+    <div id="ch-form"></div>
+    <h3 class="sub-titulo">Histórico</h3>
+    <div id="ch-hist" class="hist"></div>
+  </div>
+</section>
+
+<div id="aviso" class="aviso" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../admin/js/admin-config.js"></script>
+<script src="../admin/js/supabase-client.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../admin/js/chamados-lib.js"></script>
+<script src="../admin/js/os-lib.js"></script>
+<script src="../admin/js/geocodificar.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -113,6 +113,10 @@ if (!moduloLigado('perfisAcesso')) {
   document.querySelectorAll('[data-requires-module]').forEach(function (el) {
     if (!moduloLigado(el.dataset.requiresModule)) el.hidden = true;
   });
+  // o contrário: bloco que só vale enquanto o módulo está DESLIGADO (ex: versão simples da tabela)
+  document.querySelectorAll('[data-hidden-with-module]').forEach(function (el) {
+    if (moduloLigado(el.dataset.hiddenWithModule)) el.hidden = true;
+  });
 })();
 
 // Se a página atual pertence a um módulo desligado neste cliente (ex: acesso

@@ -8,18 +8,42 @@ var fieldIds = [
   'forma_pagamento_padrao', 'local_entrega_preferencial', 'observacoes'
 ];
 
+// Campos dos módulos vindos da Oficina: só entram quando o módulo está ligado (as colunas só existem depois dos sql/010 e 011).
+if (moduloLigado('funisLeads')) {
+  fieldIds.push('categoria', 'canal_aquisicao', 'situacao');
+  document.getElementById('canal_aquisicao').innerHTML = opcoesCanalHtml('');
+  document.getElementById('situacao').innerHTML = opcoesSituacaoHtml('ativo');
+}
+if (moduloLigado('perfisAcesso')) fieldIds.push('eh_cliente');
+
+// Programadora e recepção só cadastram clientes (nunca leads dos funis)
+function somenteClienteChamados() { return ['programadora', 'recepcao'].indexOf(window.ADMIN_ROLE) !== -1; }
+if (moduloLigado('perfisAcesso') && window.ADMIN_AUTH_READY) {
+  window.ADMIN_AUTH_READY.then(function () {
+    if (somenteClienteChamados()) {
+      var sel = document.getElementById('eh_cliente');
+      sel.value = 'true';
+      sel.closest('.form-grid').style.display = 'none';
+    }
+  });
+}
+
 function getFormValues() {
   var values = {};
   fieldIds.forEach(function (id) {
     values[id] = document.getElementById(id).value.trim() || null;
   });
+  if (moduloLigado('perfisAcesso')) values.eh_cliente = somenteClienteChamados() || document.getElementById('eh_cliente').value === 'true';
+  if (moduloLigado('funisLeads') && !values.situacao) values.situacao = 'ativo'; // coluna not null
   return values;
 }
 
 function setFormValues(cliente) {
   fieldIds.forEach(function (id) {
-    document.getElementById(id).value = cliente && cliente[id] != null ? cliente[id] : '';
+    document.getElementById(id).value = cliente && cliente[id] != null ? String(cliente[id]) : '';
   });
+  if (moduloLigado('perfisAcesso')) document.getElementById('eh_cliente').value = cliente && cliente.eh_cliente ? 'true' : 'false';
+  if (moduloLigado('funisLeads') && !document.getElementById('situacao').value) document.getElementById('situacao').value = 'ativo';
 }
 
 function resetForm() {

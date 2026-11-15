@@ -147,3 +147,13 @@ test('perfisAcesso: trocar-senha é aberta por qualquer perfil', async () => {
   const win = await montarPaginaComPerfil('trocar-senha.html', { perfisAcesso: true }, 'tecnico');
   assert.equal(win.__redirecionouPara, undefined);
 });
+
+test('data-hidden-with-module: bloco simples some quando o módulo está ligado', () => {
+  const dom = new JSDOM('<!doctype html><body><nav class="admin-nav"></nav><div id="simples" data-hidden-with-module="chamados">a</div><div id="completo" data-requires-module="chamados">b</div></body>', {
+    url: 'https://cliente-teste.exemplo/admin/estoque.html', runScripts: 'outside-only'
+  });
+  dom.window.ADMIN_CONFIG = { enabledModules: { chamados: true } };
+  dom.window.eval(NAV_JS);
+  assert.equal(dom.window.document.getElementById('simples').hidden, true);
+  assert.equal(dom.window.document.getElementById('completo').hidden, false);
+});
