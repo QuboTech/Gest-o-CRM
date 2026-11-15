@@ -4,7 +4,7 @@
 
 var crypto = require('crypto');
 
-var SUPABASE_URL = process.env.SUPABASE_URL || 'https://mpenhzpdjadnyahbegeo.supabase.co'; // projeto Supabase deste cliente (variável da Vercel)
+var SUPABASE_URL = process.env.SUPABASE_URL || 'https://sgnohhnnwptzvjfwypwj.supabase.co'; // projeto Supabase deste cliente (variável da Vercel)
 var LIMITE_PADRAO = 500;
 var LIMITE_MAXIMO = 1000;
 

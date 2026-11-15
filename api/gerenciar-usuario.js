@@ -2,7 +2,7 @@
 // Só o Administrador (role === 'admin') pode chamar; usa a service_role
 // key do Supabase, que nunca fica exposta no navegador.
 
-var SUPABASE_URL = process.env.SUPABASE_URL || 'https://mpenhzpdjadnyahbegeo.supabase.co'; // projeto Supabase deste cliente (variável da Vercel)
+var SUPABASE_URL = process.env.SUPABASE_URL || 'https://sgnohhnnwptzvjfwypwj.supabase.co'; // projeto Supabase deste cliente (variável da Vercel)
 var SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || ''; // chave pública (variável da Vercel)
 var SYNTHETIC_DOMAIN = process.env.SYNTHETIC_EMAIL_DOMAIN || '@gestaocrm.internal'; // igual a ADMIN_CONFIG.syntheticEmailDomain
 
