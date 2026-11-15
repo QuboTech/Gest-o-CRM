@@ -12,7 +12,12 @@ var ADMIN_CONFIG = {
     assistenciaSeloLacre: false, // submódulo: selos/lacres de metrologia legal (ex: balanças)
     pedidosVacuo: false,         // submódulo: itens de embalagem a vácuo
     financeiro: true,
-    leads: false
+    leads: false,
+    // Módulos vindos do CRM da Oficina (ver sql/010 a 013):
+    perfisAcesso: false, // perfis (admin, atendente, vendedor, financeiro, tecnico...) com segurança no banco; liga a tela Usuários
+    funisLeads: false,   // funis Vendas/Manutenção/Pós-venda + Dashboard (exige perfisAcesso)
+    chamados: false,     // Chamados (campo/oficina), OS, Relatórios; substitui a Assistência Técnica (exige perfisAcesso e estoque)
+    apiIntegracao: false // tela Integrações + API somente leitura em /api/v1 (exige perfisAcesso)
   }
 };
 
