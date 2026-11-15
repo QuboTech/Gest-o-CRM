@@ -3,46 +3,59 @@
 Sistema de gestão genérico, sem marca ou dados de nenhuma empresa
 específica. É o **sistema base**: sempre que for parametrizado para um
 cliente, o caminho é criar uma cópia limpa deste repositório e customizar
-essa cópia (branding, dados da empresa, banco Supabase próprio) — este
-repositório em si permanece genérico.
+essa cópia (branding, dados da empresa, banco Supabase próprio, módulos
+ligados) — este repositório em si permanece genérico. Ver
+`CHECKLIST-NOVO-CLIENTE.md` para o passo a passo.
 
 ## Módulos
 
-- **CRM** — Clientes, Pedidos e Catálogo de produtos.
-- **Assistência Técnica** — atendimentos vinculados a cliente + equipamento
-  cadastrado, com baixa automática de peça no estoque.
-- **Estoque** — cadastro de peças, exportação/relatório e importação via
-  planilha Excel.
-- **Financeiro** — entradas e saídas.
+Todo cliente tem o núcleo (sempre ligado) e escolhe quais módulos opcionais
+usar, via `ADMIN_CONFIG.enabledModules` em `admin/js/admin-config.js`:
+
+- **CRM** (núcleo) — Clientes, Pedidos e Catálogo de produtos.
+  - Submódulo opcional `pedidosVacuo`: itens de pedido em formato de
+    embalagem a vácuo (material, largura/comprimento/espessura, peso) —
+    só faz sentido pra cliente desse ramo específico.
+- **Assistência Técnica** (`assistenciaTecnica`) — atendimentos vinculados a
+  cliente + equipamento cadastrado, com baixa automática de peça no estoque.
+  - Submódulo opcional `assistenciaSeloLacre`: campos de selo/lacre de
+    metrologia legal (ex: balanças) — só faz sentido pra cliente desse ramo.
+- **Estoque** (`estoque`) — cadastro de peças, exportação/relatório e
+  importação via planilha Excel.
+- **Financeiro** (`financeiro`) — entradas e saídas.
+- **Leads** (`leads`) — acompanhamento de leads (canal de aquisição, status,
+  tentativas de contato, quem atendeu). Portado do sistema desktop da
+  Oficina das Balanças.
+
+A navegação (`admin/js/nav.js`) e os blocos de formulário marcados com
+`data-requires-module="..."` seguem essa configuração automaticamente — não
+precisa editar cada página `.html` por cliente.
 
 ## Parametrização para um cliente novo
 
-Tudo que muda de cliente para cliente está centralizado em poucos lugares:
+Tudo que muda de cliente para cliente está centralizado em poucos lugares
+— ver `CHECKLIST-NOVO-CLIENTE.md` para o passo a passo completo:
 
-- `admin/js/admin-config.js` → `ADMIN_CONFIG` (projeto Supabase do cliente)
-  e `EMPRESA_CONFIG` (nome, CNPJ, endereço, chave PIX — usados nos
-  impressos de pedido/orçamento/assistência técnica).
-- `assets/img/logo-full.png` e o bloco `.brand-mark` (reaproveitado em
-  `admin/login.html`, `admin/trocar-senha.html`, `index.html`, `404.html` e
-  no orçamento impresso) — trocar pela identidade visual do cliente.
-- Banco de dados: criar um projeto Supabase novo e aplicar as migrações
-  (schema abaixo) nesse projeto próprio do cliente.
-- `index.html` — hoje é só uma landing enxuta apontando pro login; cada
-  cliente pode receber sua própria página institucional aqui, se quiser.
+- `admin/js/admin-config.js` → `ADMIN_CONFIG` (projeto Supabase e módulos
+  ligados do cliente) e `EMPRESA_CONFIG` (nome, CNPJ, endereço, chave PIX).
+- `assets/img/logo-full.png` e o bloco `.brand-mark` — trocar pela
+  identidade visual do cliente.
+- Banco de dados: criar um projeto Supabase novo e aplicar as migrações de
+  `sql/` (ver `sql/README.md`) nesse projeto próprio do cliente.
+- `index.html` — landing enxuta apontando pro login; cada cliente pode
+  receber sua própria página institucional aqui, se quiser.
 
 ## Infraestrutura (deste ambiente de referência)
 
-- **Supabase**: projeto `hln-gestao-crm` (ref `agtlqmbhkajsxdpeqviq`, região
-  `sa-east-1`) — tabelas: `profiles`, `clientes`, `equipamentos`,
-  `assistencias_tecnicas`, `estoque_pecas`, `produtos_catalogo`, `pedidos`,
-  `pedido_itens_vacuo`, `pedido_itens_gerais`, `financeiro_entradas`,
-  `financeiro_saidas`. RLS: `authenticated` tem acesso total, `anon` não tem
-  acesso a nada.
+- **Supabase**: projeto `crp-base` (ref `mpenhzpdjadnyahbegeo`, região
+  `sa-east-1`, org QuboTech). Schema versionado em `sql/` (ver
+  `sql/README.md`) — antes só existia descrito em prosa, apontando pra um
+  projeto Supabase antigo e pausado.
 - **Deploy**: Vercel, projeto `gestao-crm`, produção em
   `https://gestao-crm-three.vercel.app`.
-- **Repositório**: `github.com/QuboTech/Gest-o-CRM`, branch `main`.
-- **Login inicial**: usuário `gustavo`, com troca de senha obrigatória
-  configurada (`must_change_password = true` na tabela `profiles`).
+- **Repositório**: `github.com/QuboTech/Gest-o-CRM`.
+- **Testes**: `npm install && npm test` — jsdom cobrindo a navegação modular
+  e o módulo de Leads com dados simulados (ver `test/`).
 
 ## Como continuar
 

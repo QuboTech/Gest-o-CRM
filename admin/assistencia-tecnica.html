@@ -14,14 +14,7 @@
 
 <header class="admin-header no-print">
   <div class="admin-brand">CRP</div>
-  <nav class="admin-nav">
-    <a href="pedido.html">Pedido</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="assistencia-tecnica.html" class="active">Assistência Técnica</a>
-    <a href="estoque.html">Estoque</a>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="financeiro.html">Financeiro</a>
-  </nav>
+  <nav class="admin-nav"></nav>
   <div class="admin-user">
     <span>Olá, <span data-user-name>—</span></span>
     <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
@@ -99,27 +92,30 @@
       </div>
       <p id="peca-estoque-info" style="display:none; margin-bottom:12px; font-size:0.82rem; color:var(--gray-400);"></p>
 
-      <h2 style="margin-top:8px;">Selo</h2>
-      <div class="form-grid" style="margin-bottom:20px;">
-        <div class="form-field">
-          <label for="selo_antigo">Selo Antigo</label>
-          <input type="text" id="selo_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+      <!-- Submódulo opcional: assistenciaSeloLacre (metrologia legal / balanças) -->
+      <div data-requires-module="assistenciaSeloLacre">
+        <h2 style="margin-top:8px;">Selo</h2>
+        <div class="form-grid" style="margin-bottom:20px;">
+          <div class="form-field">
+            <label for="selo_antigo">Selo Antigo</label>
+            <input type="text" id="selo_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+          </div>
+          <div class="form-field">
+            <label for="selo_novo">Selo Novo</label>
+            <input type="text" id="selo_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+          </div>
         </div>
-        <div class="form-field">
-          <label for="selo_novo">Selo Novo</label>
-          <input type="text" id="selo_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
-        </div>
-      </div>
 
-      <h2 style="margin-top:8px;">Lacre</h2>
-      <div class="form-grid" style="margin-bottom:8px;">
-        <div class="form-field">
-          <label for="lacre_antigo">Lacre Antigo</label>
-          <input type="text" id="lacre_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
-        </div>
-        <div class="form-field">
-          <label for="lacre_novo">Lacre Novo</label>
-          <input type="text" id="lacre_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+        <h2 style="margin-top:8px;">Lacre</h2>
+        <div class="form-grid" style="margin-bottom:8px;">
+          <div class="form-field">
+            <label for="lacre_antigo">Lacre Antigo</label>
+            <input type="text" id="lacre_antigo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+          </div>
+          <div class="form-field">
+            <label for="lacre_novo">Lacre Novo</label>
+            <input type="text" id="lacre_novo" maxlength="20" placeholder="Alfanumérico, até 20 caracteres">
+          </div>
         </div>
       </div>
 
@@ -248,6 +244,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="js/admin-config.js"></script>
+<script src="js/nav.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
