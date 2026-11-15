@@ -57,6 +57,7 @@ create trigger trg_assistencias_tecnicas_updated_at before update on assistencia
 create or replace function ajustar_estoque_assistencia()
 returns trigger
 language plpgsql
+set search_path = public
 as $function$
 begin
   if TG_OP = 'INSERT' then

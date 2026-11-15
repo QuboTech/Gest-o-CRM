@@ -14,14 +14,7 @@
 
 <header class="admin-header no-print">
   <div class="admin-brand">CRP</div>
-  <nav class="admin-nav">
-    <a href="pedido.html" class="active">Pedido</a>
-    <a href="clientes.html">Clientes</a>
-    <a href="assistencia-tecnica.html">Assistência Técnica</a>
-    <a href="estoque.html">Estoque</a>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="financeiro.html">Financeiro</a>
-  </nav>
+  <nav class="admin-nav"></nav>
   <div class="admin-user">
     <span>Olá, <span data-user-name>—</span></span>
     <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
@@ -55,8 +48,8 @@
     </div>
   </div>
 
-  <!-- ITENS VÁCUO -->
-  <div class="admin-card">
+  <!-- ITENS VÁCUO (submódulo opcional: pedidosVacuo) -->
+  <div class="admin-card" data-requires-module="pedidosVacuo">
     <h2>Itens — Embalagem a Vácuo</h2>
     <div class="items-header">
       <span>Material</span><span>Larg. (m)</span><span>Comp. (m)</span><span>Esp. (µ)</span>
@@ -303,6 +296,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/admin-config.js"></script>
+<script src="js/nav.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>

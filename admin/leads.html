@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leads — CRP</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/img/logo-full.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<header class="admin-header no-print">
+  <div class="admin-brand">CRP</div>
+  <nav class="admin-nav"></nav>
+  <div class="admin-user">
+    <span>Olá, <span data-user-name>—</span></span>
+    <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
+    <button data-logout>Sair</button>
+  </div>
+</header>
+
+<main class="admin-main no-print">
+  <h1 class="admin-title">Leads</h1>
+
+  <div class="admin-card">
+    <h2 id="form-title">Novo lead</h2>
+    <form id="lead-form">
+      <input type="hidden" id="lead-id">
+
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="data_contato">Data do contato *</label>
+          <input type="date" id="data_contato" required>
+        </div>
+        <div class="form-field">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome">
+        </div>
+        <div class="form-field">
+          <label for="numero">Número</label>
+          <input type="text" id="numero">
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="canal_aquisicao">Canal de aquisição</label>
+          <input type="text" id="canal_aquisicao" list="lista-canais">
+          <datalist id="lista-canais">
+            <option value="Google ads">
+            <option value="Meta ads">
+            <option value="Instagram">
+            <option value="Facebook">
+            <option value="Indicação">
+            <option value="Cliente antiga">
+            <option value="Passou em frente ao local">
+          </datalist>
+        </div>
+        <div class="form-field">
+          <label for="status">Status</label>
+          <input type="text" id="status" list="lista-status">
+          <datalist id="lista-status">
+            <option value="Qualificado">
+            <option value="Analisando">
+            <option value="Desqualificado">
+            <option value="Serviço">
+            <option value="Compra">
+            <option value="Sem resposta">
+          </datalist>
+        </div>
+        <div class="form-field">
+          <label for="quem_atendeu">Quem atendeu</label>
+          <input type="text" id="quem_atendeu">
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-field">
+          <label for="tentativas_contato">Tentativas de contato</label>
+          <input type="number" id="tentativas_contato" min="0" max="50" step="1">
+        </div>
+        <div class="form-field" style="align-self:end;">
+          <label style="display:flex; align-items:center; gap:8px; font-weight:400;">
+            <input type="checkbox" id="mensagem_final" style="width:auto;">
+            Mensagem final (parou de responder)
+          </label>
+        </div>
+        <div class="form-field span-2">
+          <label for="motivo_nao_fechou">Motivo (se não fechou)</label>
+          <textarea id="motivo_nao_fechou" rows="2"></textarea>
+        </div>
+      </div>
+
+      <p id="lead-error" class="error-message" style="display:none;"></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="lead-save-btn">Salvar lead</button>
+        <button type="button" class="btn btn-outline" id="lead-cancel-btn">Limpar / novo</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-card">
+    <h2>Leads cadastrados</h2>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+      <input type="text" id="lead-search" class="table-search" placeholder="Buscar por nome ou número..." style="flex:1; min-width:220px;">
+      <select id="lead-filtro-status" style="max-width:220px;">
+        <option value="">Todos os status</option>
+      </select>
+    </div>
+    <p id="lead-resumo" style="color:var(--gray-400); font-size:0.85rem; margin-bottom:8px;"></p>
+    <div class="table-scroll">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Nome</th>
+            <th>Número</th>
+            <th>Canal</th>
+            <th>Status</th>
+            <th>Tentativas</th>
+            <th>Quem atendeu</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="leads-tbody">
+          <tr><td colspan="8">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/admin-config.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/leads.js"></script>
+</body>
+</html>

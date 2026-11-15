@@ -1,0 +1,11 @@
+{
+  "name": "crp-admin",
+  "private": true,
+  "description": "CRP — testes do portal admin (sem build; o site em si continua HTML/CSS/JS puro).",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.0"
+  }
+}

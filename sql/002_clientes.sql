@@ -30,6 +30,7 @@ create table if not exists clientes (
 create or replace function set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $function$
 begin
   new.updated_at = now();
