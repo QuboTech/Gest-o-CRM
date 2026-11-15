@@ -576,7 +576,7 @@ function buildViaHtml(label) {
   var formaPagamentoTexto = formatarFormaPagamento();
 
   return '<div class="print-via">' +
-    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — HLN Embalagens e Equipamentos</h2>Data: ' + dataStr + '</div>' +
+    '<div class="print-header"><div><h2>Pedido — ' + (cliente.razao_social || cliente.nome_fantasia || '') + ' — ' + (EMPRESA_CONFIG.nome || '') + '</h2>Data: ' + dataStr + '</div>' +
     '<div class="print-via-label">Via ' + label + '</div></div>' +
     '<p><strong>CLIENTE:</strong> ' + (cliente.razao_social || '') + (cliente.nome_fantasia ? ' (' + cliente.nome_fantasia + ')' : '') + '</p>' +
     '<p><strong>ENDEREÇO:</strong> ' + enderecoCompleto + '</p>' +
@@ -596,23 +596,9 @@ function buildViaHtml(label) {
 
 /* ===================== ORÇAMENTO (A4, papel timbrado) ===================== */
 
-var HLN_DADOS_EMPRESA = {
-  cnpj: '66.878.650/0001-42',
-  endereco: 'Jardim Nossa Senhora de Fátima, Americana - SP, CEP 13478-570'
-};
+var DADOS_EMPRESA = { cnpj: EMPRESA_CONFIG.cnpj, endereco: EMPRESA_CONFIG.endereco };
 
-var BRAND_MARK_HTML =
-  '<div class="brand-mark" role="img" aria-label="HLN Embalagens e Equipamentos">' +
-    '<span class="bm-label" aria-hidden="true">Embalagens</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 38 Q100 2 194 38"/><path d="M30 38 Q100 14 170 38"/><path d="M54 38 Q100 24 146 38"/>' +
-    '</svg>' +
-    '<span class="bm-hln" aria-hidden="true">HLN</span>' +
-    '<svg class="bm-arc" viewBox="0 0 200 40" aria-hidden="true">' +
-      '<path d="M6 2 Q100 38 194 2"/><path d="M30 2 Q100 26 170 2"/><path d="M54 2 Q100 16 146 2"/>' +
-    '</svg>' +
-    '<span class="bm-label" aria-hidden="true">e Equipamentos</span>' +
-  '</div>';
+var BRAND_MARK_HTML = '<div class="brand-mark"><strong>' + (EMPRESA_CONFIG.nome || '') + '</strong></div>';
 
 function buildOrcamentoHtml() {
   var dataStr = new Date().toLocaleDateString('pt-BR');
@@ -643,9 +629,9 @@ function buildOrcamentoHtml() {
     '<div class="orcamento-header">' +
       '<div>' + BRAND_MARK_HTML +
         '<div class="orcamento-empresa-dados">' +
-          'HLN Embalagens e Equipamentos<br>' +
-          'CNPJ: ' + HLN_DADOS_EMPRESA.cnpj + '<br>' +
-          HLN_DADOS_EMPRESA.endereco +
+          EMPRESA_CONFIG.nome + '<br>' +
+          'CNPJ: ' + DADOS_EMPRESA.cnpj + '<br>' +
+          DADOS_EMPRESA.endereco +
         '</div>' +
       '</div>' +
       '<div class="orcamento-titulo"><h1>ORÇAMENTO</h1>Data: ' + dataStr + '</div>' +

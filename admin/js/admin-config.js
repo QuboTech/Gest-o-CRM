@@ -5,3 +5,6 @@ var ADMIN_CONFIG = {
   supabaseAnonKey: 'sb_publishable_oewjlw01Gkkn8WSeLFczwA_pLbiDXnA',
   syntheticEmailDomain: '@gestaocrm.internal'
 };
+
+// Dados da empresa que usa este sistema (aparecem nos impressos). Preencher por cliente.
+var EMPRESA_CONFIG = { nome: 'Gestão CRM', cnpj: '', endereco: '' };
