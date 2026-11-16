@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — CRP</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/img/logo-full.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/modulos-oficina.css">
+<style>
+  :root {
+    --bi-ativo: #3a3a36;
+    --bi-ganho: #2e9e5b;
+    --bi-perdido: #cfcfca;
+    --bi-alerta: #f0a020;
+    --bi-ink: #1b1b18;
+    --bi-muted: #8b95a7;
+  }
+  .bi-section { font-size:0.8rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--bi-muted); margin:28px 0 12px; }
+  .bi-kpis { display:grid; grid-template-columns:repeat(6, 1fr); gap:16px; }
+  @media (max-width: 1280px) { .bi-kpis { grid-template-columns:repeat(3, 1fr); } }
+  @media (max-width: 560px) { .bi-kpis { grid-template-columns:repeat(2, 1fr); } }
+  .bi-kpi { background:#fff; border-radius:14px; padding:18px 20px; box-shadow:0 6px 22px rgba(10,37,64,0.07); border-top:4px solid var(--kpi-cor, var(--bi-ink)); }
+  .bi-kpi .bi-kpi-label { font-size:0.78rem; color:var(--bi-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+  .bi-kpi .bi-kpi-valor { font-size:2.1rem; font-weight:800; color:var(--bi-ink); line-height:1.15; margin-top:6px; }
+  .bi-kpi .bi-kpi-sub { font-size:0.78rem; color:var(--bi-muted); margin-top:2px; }
+  .bi-charts { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:16px; }
+  .bi-card { background:#fff; border-radius:14px; padding:18px 20px 14px; box-shadow:0 6px 22px rgba(10,37,64,0.07); }
+  .bi-card h2 { font-size:0.95rem; color:var(--bi-ink); margin:0 0 12px; }
+  .bi-chart-box { position:relative; height:260px; }
+  .dash-grid { display:flex; flex-direction:column; gap:16px; }
+  .dash-quad-head { display:flex; align-items:center; flex-wrap:wrap; gap:8px 24px; margin-bottom:6px; }
+  .dash-quad-head h2 { margin:0; display:flex; align-items:center; gap:10px; }
+  .dash-count { font-size:1.4rem; font-weight:800; color:var(--bi-ink); }
+  .dash-quad-cols { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:24px; }
+  .dash-col { min-width:0; }
+  .dash-quick summary { cursor:pointer; font-size:0.85rem; font-weight:600; color:var(--blue-accent); }
+  .dash-quick[open] { flex-basis:100%; order:3; }
+  .dash-quick-form { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 6px; }
+  .dash-quick-form input, .dash-quick-form select { padding:8px 10px; border-radius:6px; border:1px solid #d7ddea; flex:1 1 160px; }
+  .dash-link { font-size:0.82rem; margin-left:auto; }
+  .dash-subtitle { display:flex; align-items:center; gap:8px; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--bi-muted); margin:12px 0 8px; }
+  .dash-count-sm { font-size:0.8rem; font-weight:700; color:var(--bi-ink); background:var(--off-white); border-radius:10px; padding:1px 8px; }
+  .dash-lista { max-height:340px; overflow-y:auto; padding-right:4px; }
+  .dash-empty { color:var(--bi-muted); font-size:0.85rem; }
+  .dash-legenda { display:flex; flex-wrap:wrap; gap:8px 20px; font-size:0.8rem; color:var(--bi-muted); margin:-4px 0 14px; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+  .dot-verde { background:#2e9e5b; } .dot-amarelo { background:#f0a020; } .dot-vermelho { background:#d94452; }
+  /* Linha inteira preenchida pela cor do prazo */
+  .dash-row { display:grid; align-items:center; column-gap:14px; row-gap:2px; padding:10px 14px; border-radius:8px; margin-bottom:6px; font-size:0.9rem; border-left:5px solid transparent; }
+  .dash-row-pend { grid-template-columns:minmax(0,1fr) 170px 140px; }
+  .dash-row-trat { grid-template-columns:minmax(0,1fr) auto 48px; }
+  .dash-row .dash-row-nome { min-width:0; overflow-wrap:anywhere; }
+  .dash-row .dash-row-meta { font-size:0.78rem; color:#4a5568; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dash-row-trat .dash-row-meta { text-align:right; }
+  .dash-row .badge { white-space:nowrap; justify-self:start; }
+  .dash-col { container-type:inline-size; }
+  @container (max-width: 440px) {
+    .dash-row-pend { grid-template-columns:minmax(0,1fr) auto; }
+    .dash-row-pend .dash-row-meta { grid-column:1 / -1; grid-row:2; }
+    .dash-row-pend .badge { grid-column:2; grid-row:1; justify-self:end; }
+    .dash-row-trat { grid-template-columns:minmax(0,1fr) auto; }
+    .dash-row-trat .dash-row-meta { display:none; }
+  }
+  .dash-row-verde { background:#dcf3e4; border-left-color:#2e9e5b; }
+  .dash-row-amarelo { background:#fff3cd; border-left-color:#f0a020; }
+  .dash-row-vermelho { background:#fbe1e1; border-left-color:#d94452; }
+</style>
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <div class="admin-brand">CRP</div>
+  <nav class="admin-nav"></nav>
+  <div class="admin-user">
+    <span>Olá, <span data-user-name>—</span></span>
+    <a href="trocar-senha.html" style="color:#cfd9ea; font-size:0.85rem;">Trocar senha</a>
+    <button data-logout>Sair</button>
+  </div>
+</header>
+
+<main class="admin-main">
+  <h1 class="admin-title">Dashboard</h1>
+
+  <div class="bi-kpis">
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-ativo);"><div class="bi-kpi-label">Leads ativos</div><div class="bi-kpi-valor" id="kpi-ativos">—</div><div class="bi-kpi-sub" id="kpi-ativos-sub">em andamento</div></div>
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-ganho);"><div class="bi-kpi-label">Tratados hoje</div><div class="bi-kpi-valor" id="kpi-tratados">—</div><div class="bi-kpi-sub" id="kpi-tratados-sub">contatos registrados</div></div>
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-alerta);"><div class="bi-kpi-label">Pendentes</div><div class="bi-kpi-valor" id="kpi-pendentes">—</div><div class="bi-kpi-sub" id="kpi-pendentes-sub">precisam de retorno</div></div>
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-ganho);"><div class="bi-kpi-label">Ganhos</div><div class="bi-kpi-valor" id="kpi-ganhos">—</div><div class="bi-kpi-sub" id="kpi-ganhos-sub"></div></div>
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-perdido);"><div class="bi-kpi-label">Perdidos</div><div class="bi-kpi-valor" id="kpi-perdidos">—</div><div class="bi-kpi-sub" id="kpi-perdidos-sub"></div></div>
+    <div class="bi-kpi" style="--kpi-cor:var(--bi-ink);"><div class="bi-kpi-label">Conversão</div><div class="bi-kpi-valor" id="kpi-conversao">—</div><div class="bi-kpi-sub" id="kpi-conversao-sub">ganhos ÷ encerrados</div></div>
+  </div>
+
+  <div class="bi-section">Visão geral</div>
+  <div class="bi-charts">
+    <div class="bi-card"><h2>Situação dos leads</h2><div class="bi-chart-box"><canvas id="chart-situacao"></canvas></div></div>
+    <div class="bi-card"><h2>Leads por canal de aquisição</h2><div class="bi-chart-box"><canvas id="chart-canal"></canvas></div></div>
+    <div class="bi-card"><h2>Leads por mês</h2><div class="bi-chart-box"><canvas id="chart-mes"></canvas></div></div>
+    <div class="bi-card"><h2>Leads por funil</h2><div class="bi-chart-box"><canvas id="chart-funil"></canvas></div></div>
+  </div>
+
+  <div class="bi-section">Efetividade no fechamento</div>
+  <div class="bi-card">
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+      <label for="efet-periodo" style="font-weight:600;">Período do fechamento</label>
+      <select id="efet-periodo"></select>
+      <span class="dash-empty" style="margin:0;">Conta leads fechados pelo histórico (status Fechado) ou pela Situação: ganho ÷ (ganho + perdido).</span>
+    </div>
+    <div class="table-scroll"><table class="admin-table">
+      <thead><tr><th>Quem fechou</th><th class="num">Ganhos</th><th class="num">Perdidos</th><th class="num">Encerrados</th><th class="num">Taxa de fechamento</th></tr></thead>
+      <tbody id="efet-tbody"><tr><td colspan="5">Carregando...</td></tr></tbody>
+    </table></div>
+    <p class="dash-empty" style="margin-top:8px;">"Sem registro" são leads que já vieram como ganho/perdido (importados) ou fechados antes deste controle: não se sabe quem fechou nem quando.</p>
+  </div>
+
+  <div class="bi-section">Últimos fechamentos</div>
+  <div class="bi-card">
+    <div class="table-scroll"><table class="admin-table">
+      <thead><tr><th>Cliente</th><th>Funil</th><th>Resultado</th><th>Fechado em</th><th>Por</th><th>Próxima revisita</th></tr></thead>
+      <tbody id="fech-tbody"><tr><td colspan="6">Carregando...</td></tr></tbody>
+    </table></div>
+    <p class="dash-empty" style="margin-top:8px;">Os 15 fechamentos mais recentes (ganhos e perdidos). Clique no nome para abrir a ficha e o histórico. A lista completa fica em cada funil, na aba "Fechados".</p>
+  </div>
+
+  <div class="bi-section">Novo cliente</div>
+  <div class="bi-card">
+    <form class="dash-quick-form dash-novo" id="novo-form">
+      <select id="novo-funil" required></select>
+      <input type="text" id="novo-nome" placeholder="Nome *" required>
+      <input type="text" id="novo-telefone" placeholder="Telefone">
+      <input type="email" id="novo-email" placeholder="E-mail">
+      <select id="novo-canal"></select>
+      <button type="submit" class="btn btn-primary">Adicionar cliente</button>
+      <p id="novo-error" class="error-message" style="display:none; flex-basis:100%;"></p>
+    </form>
+    <p class="dash-empty" style="margin-top:6px;">Preencha o nome e pelo menos o telefone ou o e-mail.</p>
+  </div>
+
+  <div class="bi-section">Operação do dia</div>
+  <div class="dash-legenda">
+    <span><i class="dot dot-verde"></i> Em dia</span>
+    <span><i class="dot dot-amarelo"></i> Atenção (vence em até 24h)</span>
+    <span><i class="dot dot-vermelho"></i> Atrasado / precisa de contato</span>
+  </div>
+  <div class="dash-grid">
+
+    <div class="bi-card dash-quad" id="quad-venda" data-role="atendente">
+      <div class="dash-quad-head">
+        <h2>Vendas <span class="dash-count" id="quad-count-venda">—</span></h2>
+        <a class="dash-link" href="vendas.html">Ver tudo em Vendas →</a>
+      </div>
+      <div class="dash-quad-cols">
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Tratado hoje <span class="dash-count-sm" id="quad-count-tratado-venda">—</span></h3>
+          <div class="dash-lista" id="quad-tratado-venda">Carregando...</div>
+        </div>
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Pendente <span class="dash-count-sm" id="quad-count-pendente-venda">—</span></h3>
+          <div class="dash-lista" id="quad-lista-venda">Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bi-card dash-quad" id="quad-manutencao" data-role="tecnico">
+      <div class="dash-quad-head">
+        <h2>Manutenção <span class="dash-count" id="quad-count-manutencao">—</span></h2>
+        <a class="dash-link" href="manutencao.html">Ver tudo em Manutenção →</a>
+      </div>
+      <div class="dash-quad-cols">
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Tratado hoje <span class="dash-count-sm" id="quad-count-tratado-manutencao">—</span></h3>
+          <div class="dash-lista" id="quad-tratado-manutencao">Carregando...</div>
+        </div>
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Pendente <span class="dash-count-sm" id="quad-count-pendente-manutencao">—</span></h3>
+          <div class="dash-lista" id="quad-lista-manutencao">Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bi-card dash-quad" id="quad-pos_venda" data-role="atendente">
+      <div class="dash-quad-head">
+        <h2>Pós-venda / Follow-up <span class="dash-count" id="quad-count-pos_venda">—</span></h2>
+        <a class="dash-link" href="pos-venda.html">Ver tudo em Pós-venda →</a>
+      </div>
+      <div class="dash-quad-cols">
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Tratado hoje <span class="dash-count-sm" id="quad-count-tratado-pos_venda">—</span></h3>
+          <div class="dash-lista" id="quad-tratado-pos_venda">Carregando...</div>
+        </div>
+        <div class="dash-col">
+          <h3 class="dash-subtitle">Pendente <span class="dash-count-sm" id="quad-count-pendente-pos_venda">—</span></h3>
+          <div class="dash-lista" id="quad-lista-pos_venda">Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="js/admin-config.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth-guard.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/prazos.js"></script>
+<script src="js/cliente-detalhe.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

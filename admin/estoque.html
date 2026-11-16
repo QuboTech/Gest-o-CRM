@@ -23,6 +23,7 @@
 </header>
 
 <main class="admin-main">
+  <div class="abas-estoque" id="abas-estoque" hidden></div>
   <h1 class="admin-title">Estoque</h1>
   <p style="color:var(--gray-400); margin-top:-16px; margin-bottom:20px; font-size:0.9rem;">
     Cadastro de peças. A quantidade é baixada automaticamente quando uma peça é usada em uma Assistência Técnica.
@@ -41,6 +42,20 @@
           <label for="quantidade">Quantidade *</label>
           <input type="text" id="quantidade" maxlength="5" placeholder="Ex: 25 ou 12.5" required>
           <span class="hint">Até 5 caracteres. Separador decimal: ponto (.)</span>
+        </div>
+        <div class="form-field" data-requires-module="chamados">
+          <label for="marca">Marca</label>
+          <input type="text" id="marca" maxlength="100" placeholder="Ex: Toledo, Filizola">
+        </div>
+        <div class="form-field" data-requires-module="chamados">
+          <label for="custo">Custo (R$)</label>
+          <input type="text" id="custo" maxlength="12" inputmode="decimal" placeholder="Ex: 35,90">
+          <span class="hint">Só o admin e o financeiro enxergam o custo.</span>
+        </div>
+        <div class="form-field" data-requires-module="chamados">
+          <label for="preco_venda">Preço de venda (R$)</label>
+          <input type="text" id="preco_venda" maxlength="12" inputmode="decimal" placeholder="Ex: 59,90">
+          <span class="hint">Aparece no orçamento do chamado.</span>
         </div>
         <div class="form-field">
           <label for="localidade">Localidade</label>
@@ -71,11 +86,23 @@
     <input type="text" id="peca-search" class="table-search" placeholder="Buscar por código, tipo/modelo, localidade...">
     <div class="table-scroll">
       <table class="admin-table">
-        <thead>
+        <thead data-hidden-with-module="chamados">
           <tr>
             <th>Código</th>
             <th>Tipo/Modelo</th>
             <th>Quantidade</th>
+            <th>Localidade</th>
+            <th></th>
+          </tr>
+        </thead>
+        <thead data-requires-module="chamados">
+          <tr>
+            <th>Código</th>
+            <th>Tipo/Modelo</th>
+            <th>Marca</th>
+            <th>Quantidade</th>
+            <th>Custo</th>
+            <th>Venda</th>
             <th>Localidade</th>
             <th></th>
           </tr>
@@ -119,6 +146,13 @@
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/planilha.js"></script>
-<script src="js/estoque.js"></script>
+<!-- com o módulo chamados: marca, custo (restrito) e preço de venda; sem ele, o estoque original do CRP -->
+<script>
+  (function () {
+    var s = document.createElement('script');
+    s.src = 'js/' + (moduloLigado('chamados') ? 'estoque-chamados.js' : 'estoque.js');
+    document.body.appendChild(s);
+  })();
+</script>
 </body>
 </html>

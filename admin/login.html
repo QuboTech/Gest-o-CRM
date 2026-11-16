@@ -62,7 +62,7 @@
       return;
     }
 
-    location.href = 'pedido.html';
+    location.href = (ADMIN_CONFIG.enabledModules && ADMIN_CONFIG.enabledModules.funisLeads ? 'dashboard.html' : 'pedido.html');
   });
 </script>
 </body>

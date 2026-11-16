@@ -30,6 +30,36 @@
     <form id="cliente-form">
       <input type="hidden" id="cliente-id">
 
+      <div class="form-grid" style="margin-bottom:20px;" data-requires-module="perfisAcesso">
+        <div class="form-field">
+          <label for="eh_cliente">Tipo</label>
+          <select id="eh_cliente">
+            <option value="false">Lead (funis de vendas)</option>
+            <option value="true">Cliente (chamados / assistência)</option>
+          </select>
+          <span class="hint">Cliente aparece nos Chamados; lead fica só nos funis.</span>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:20px;" data-requires-module="funisLeads">
+        <div class="form-field">
+          <label for="categoria">Categoria (funil)</label>
+          <select id="categoria">
+            <option value="">— Sem categoria —</option>
+            <option value="venda">Venda</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="pos_venda">Pós-venda</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="canal_aquisicao">Canal de aquisição</label>
+          <select id="canal_aquisicao"></select>
+        </div>
+        <div class="form-field">
+          <label for="situacao">Situação</label>
+          <select id="situacao"></select>
+        </div>
+      </div>
+
       <div class="form-grid" style="margin-bottom:20px;">
         <div class="form-field">
           <label for="codigo">Código interno</label>
@@ -260,6 +290,7 @@
 <script src="js/auth-guard.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/historico.js"></script>
+<script src="js/prazos.js"></script>
 <script src="js/cnpj.js"></script>
 <script src="js/planilha.js"></script>
 <script src="js/clientes.js"></script>

@@ -27,6 +27,16 @@ usar, via `ADMIN_CONFIG.enabledModules` em `admin/js/admin-config.js`:
   tentativas de contato, quem atendeu). Portado do sistema desktop da
   Oficina das Balanças.
 
+Módulos opcionais vindos do CRM da Oficina (todos desligados por padrão; ver `sql/README.md`):
+
+- **Perfis de acesso** (`perfisAcesso`) — perfis admin, atendente, vendedor, financeiro, tecnico, programadora, recepcao e
+  oficina_interna, com segurança no banco (RLS) e a tela **Usuários**.
+- **Funis de Leads** (`funisLeads`) — Vendas, Manutenção e Pós-venda com cadência de retorno, Dashboard e alertas.
+- **Chamados** (`chamados`) — chamados de campo (EX) e de oficina (OF), orçamento, faturamento, rota, OS impressa,
+  comprovante com assinatura, Relatórios e app do celular (`/app/`); substitui a Assistência Técnica simples e acrescenta
+  marca/custo/preço ao Estoque.
+- **API de integração** (`apiIntegracao`) — leitura de preços e clientes por chave (`/api/v1`) e a tela **Integrações**.
+
 A navegação (`admin/js/nav.js`) e os blocos de formulário marcados com
 `data-requires-module="..."` seguem essa configuração automaticamente — não
 precisa editar cada página `.html` por cliente.

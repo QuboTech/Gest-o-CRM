@@ -1,0 +1,35 @@
+/* Estilos extras dos módulos Chamados, Funis de Leads e Perfis (vindos do CRM da Oficina). Carregar depois de admin.css. */
+.badge-ok { background: #dcf3e4; color: #00786a; }
+/* botão X no canto superior direito (fica visível ao rolar a janela) */
+.modal-x {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  margin: -10px -10px 0 10px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f1ee;
+  color: #1b1b18;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.modal-x:hover { background: #d93035; color: #fff; }
+
+.badge-info { background: #dfeeff; color: #0b57b0; }
+.link-cliente { color: var(--navy-900); font-weight: 600; cursor: pointer; background: none; border: 0; padding: 0; font: inherit; text-align: left; }
+.link-cliente:hover { color: var(--blue-accent); text-decoration: underline; }
+
+/* Linhas das tabelas dos funis preenchidas pela cor do prazo */
+.admin-table tr.row-verde > td { background: #dcf3e4; }
+.admin-table tr.row-amarelo > td { background: #fff3cd; }
+.admin-table tr.row-vermelho > td { background: #fbe1e1; }
+.admin-table tr.row-verde > td:first-child { box-shadow: inset 5px 0 0 #2e9e5b; }
+.admin-table tr.row-amarelo > td:first-child { box-shadow: inset 5px 0 0 #f0a020; }
+.admin-table tr.row-vermelho > td:first-child { box-shadow: inset 5px 0 0 #d94452; }
+.legenda-prazo { display:flex; flex-wrap:wrap; gap:8px 20px; font-size:0.8rem; color: var(--gray-400); margin: 0 0 12px; }
+.legenda-prazo .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+.legenda-prazo .dot-verde { background:#2e9e5b; } .legenda-prazo .dot-amarelo { background:#f0a020; } .legenda-prazo .dot-vermelho { background:#d94452; }
